@@ -1,0 +1,115 @@
+<div id="page-perfil" class="page-content animate-fade-in">
+    <header class="mb-8">
+        <h1 class="text-4xl font-bold text-white">Mi Perfil</h1>
+        <p class="text-lg text-gray-400">Actualiza tu información personal y gestiona tus publicaciones.</p>
+    </header>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+
+        <!-- Columna Izquierda (Avatar y Resumen) -->
+        <div class="lg:w-1/3">
+            <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-8 flex flex-col items-center border border-white/5 sticky top-6">
+
+                <div class="relative group">
+                    <img [src]="usuario.avatar"
+                         class="w-32 h-32 rounded-full object-cover mb-4 ring-4 ring-accent-teal shadow-lg group-hover:opacity-80 transition"
+                         alt="Avatar">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                        <span class="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded">Cambiar</span>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white text-center">{{usuario.nombre}}</h2>
+                <p class="text-accent-cyan font-mono text-sm mt-1">{{usuario.correo}}</p>
+                <p class="text-gray-400 text-xs mt-2 uppercase tracking-widest font-bold">{{usuario.rol}}</p>
+
+                <div class="w-full mt-6 space-y-3">
+                    <button class="w-full bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition flex items-center justify-center gap-2 border border-white/5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Cambiar Foto
+                    </button>
+                    <!-- Enlace a configuración -->
+                    <button class="w-full bg-white/5 text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2 border border-white/5" routerLink="/alumno/configuracion">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Ajustes de Cuenta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha (Formulario y Estadísticas) -->
+        <div class="lg:w-2/3 space-y-6">
+
+            <!-- Formulario Datos Personales -->
+            <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-8 border border-white/5">
+                <h3 class="text-2xl font-semibold text-white mb-6 border-b border-white/10 pb-2">Datos Personales</h3>
+
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-medium text-gray-400 mb-1 block">Nombre Completo</label>
+                            <input type="text" [value]="usuario.nombre" readonly
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-gray-300 cursor-not-allowed focus:outline-none"
+                                title="Este campo no es editable">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-400 mb-1 block">Teléfono</label>
+                            <input type="tel" [placeholder]="usuario.telefono || 'Ej. 477 123 4567'"
+                                class="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-accent-teal transition">
+                            <p class="text-xs text-gray-500 mt-1">* Visible para Raites/Mercado</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-400 mb-1 block">Sobre mí (Bio)</label>
+                        <textarea class="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white h-24 placeholder-gray-500 focus:outline-none focus:border-accent-teal transition resize-none"
+                            placeholder="Estudiante de Ingeniería en Software, apasionado por el desarrollo web..."></textarea>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="button" class="bg-accent-teal text-primary-dark font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition shadow-lg shadow-accent-teal/10">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mis Publicaciones (Resumen) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Tarjeta Resumen Mercado -->
+                <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 border border-white/5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-white text-lg">Mis Ventas</h4>
+                        <span class="bg-accent-teal/20 text-accent-teal text-xs font-bold px-2 py-1 rounded">Activas</span>
+                    </div>
+                    @if (usuario.publicacionesMercado > 0) {
+                        <p class="text-3xl font-bold text-white mb-1">{{usuario.publicacionesMercado}}</p>
+                        <p class="text-gray-400 text-sm">Artículos publicados</p>
+                        <button class="text-accent-teal text-sm mt-3 hover:underline" routerLink="/alumno/mercado">Gestionar &rarr;</button>
+                    } @else {
+                        <p class="text-gray-400 text-sm italic">No tienes artículos en venta.</p>
+                        <button class="mt-3 text-accent-cyan text-sm hover:underline" routerLink="/alumno/mercado">Vender algo ahora</button>
+                    }
+                </div>
+
+                <!-- Tarjeta Resumen Raites -->
+                <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 border border-white/5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-white text-lg">Mis Raites</h4>
+                        <span class="bg-accent-cyan/20 text-accent-cyan text-xs font-bold px-2 py-1 rounded">Rutas</span>
+                    </div>
+                    @if (usuario.publicacionesRaites > 0) {
+                        <p class="text-3xl font-bold text-white mb-1">{{usuario.publicacionesRaites}}</p>
+                        <p class="text-gray-400 text-sm">Rutas activas</p>
+                        <button class="text-accent-cyan text-sm mt-3 hover:underline" routerLink="/alumno/raites">Gestionar &rarr;</button>
+                    } @else {
+                        <p class="text-gray-400 text-sm italic">No tienes rutas publicadas.</p>
+                        <button class="mt-3 text-accent-teal text-sm hover:underline" routerLink="/alumno/raites">Ofrecer Raite</button>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+ 

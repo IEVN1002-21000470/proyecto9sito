@@ -1,0 +1,73 @@
+<div id="page-transporte" class="page-content">
+  <header class="mb-8">
+    <h1 class="text-4xl font-bold text-white">Transporte (Raites)</h1>
+    <p class="text-lg text-gray-400">Conecta con compañeros para compartir viaje.</p>
+  </header>
+  <!-- Pestañas -->
+  <div class="flex border-b border-white/20 mb-6" id="raites-tabs">
+    <button class="tab-link active py-3 px-6 text-accent-teal border-b-2 border-accent-teal font-semibold"
+      data-target="tab-ofrezco">Ofrezco Raite</button>
+    <button class="tab-link py-3 px-6 text-gray-400 font-medium" data-target="tab-busco">Busco
+      Raite</button>
+  </div>
+
+  <!-- Contenido de Pestañas -->
+  <div id="tab-ofrezco" class="tab-content active">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold text-white">Raites Disponibles (Conductores)</h2>
+      <button class="bg-accent-teal text-primary-dark font-bold py-2 px-4 rounded-lg hover:bg-opacity-80">+
+        Ofrecer mi Raite</button>
+    </div>
+    <div class="space-y-4">
+      <!-- Raite 1 -->
+      <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 flex items-center">
+        <img class="w-12 h-12 rounded-full object-cover mr-4"
+          src="https://ui-avatars.com/api/?name=Ana+Gomez&background=10e3a4&color=1a103c&font-size=0.5" alt="Avatar">
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-white">Ana Gómez (Conductora)</h3>
+          <p class="text-sm text-gray-300">Ruta: <span class="font-medium">Plaza Mayor ->
+              UTL</span></p>
+          <p class="text-sm text-gray-400">Horario: <span class="font-medium">7:15 AM</span> |
+            Asientos: <span class="font-medium">2 disponibles</span></p>
+        </div>
+        <button class="bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20">Contactar</button>
+      </div>
+      <!-- Raite 2 -->
+      <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 flex items-center">
+        <img class="w-12 h-12 rounded-full object-cover mr-4"
+          src="https://ui-avatars.com/api/?name=Luis+Reyes&background=00b4d8&color=1a103c&font-size=0.5" alt="Avatar">
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-white">Luis Reyes (Conductor)</h3>
+          <p class="text-sm text-gray-300">Ruta: <span class="font-medium">Blvd. Delta ->
+              UTL</span></p>
+          <p class="text-sm text-gray-400">Horario: <span class="font-medium">7:30 AM</span> |
+            Asientos: <span class="font-medium">1 disponible</span></p>
+        </div>
+        <button class="bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20">Contactar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-busco" class="tab-content">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold text-white">Pasajeros Buscando Raite</h2>
+      <button class="bg-accent-cyan text-primary-dark font-bold py-2 px-4 rounded-lg hover:bg-opacity-80">+
+        Publicar Búsqueda</button>
+    </div>
+    <div class="space-y-4">
+      <!-- Pasajero 1 -->
+      <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 flex items-center">
+        <img class="w-12 h-12 rounded-full object-cover mr-4"
+          src="https://ui-avatars.com/api/?name=Carlos+Lopez&background=cccccc&color=1a103c&font-size=0.5" alt="Avatar">
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-white">Carlos López (Pasajero)</h3>
+          <p class="text-sm text-gray-300">Busca en: <span class="font-medium">Zona Centro</span>
+          </p>
+          <p class="text-sm text-gray-400">Horario: <span class="font-medium">Entrada 8:00
+              AM</span></p>
+        </div>
+        <button class="bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20">Contactar</button>
+      </div>
+    </div>
+  </div>
+</div>

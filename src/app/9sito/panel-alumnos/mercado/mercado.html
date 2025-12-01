@@ -1,0 +1,86 @@
+<div id="page-mercado" class="page-content animate-fade-in">
+  <header class="mb-8">
+    <h1 class="text-4xl font-bold text-white">Mercado Digital</h1>
+    <p class="text-lg text-gray-400">Vende, compra o intercambia libros y materiales.</p>
+  </header>
+
+  <!-- Filtros -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <!-- Buscador -->
+    <input type="text" placeholder="Buscar libro, material..."
+      class="md:col-span-2 bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-accent-teal transition">
+
+    <!-- Select Categoría -->
+    <div class="relative">
+      <select
+        class="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal appearance-none cursor-pointer transition [&>option]:bg-primary-dark">
+        <option>Todas las Categorías</option>
+        <option>Libros</option>
+        <option>Material de Taller</option>
+        <option>Uniformes</option>
+      </select>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
+        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+    <!-- Tarjeta Especial: Vender Algo (Siempre primera) -->
+    <div
+      class="bg-glass-bg backdrop-blur-lg rounded-xl border-2 border-dashed border-white/20 flex flex-col items-center justify-center p-6 cursor-pointer hover:bg-white/5 transition h-full min-h-[300px] group">
+      <div
+        class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4 group-hover:bg-accent-teal group-hover:text-primary-dark transition text-white">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+      </div>
+      <span class="text-lg font-bold text-white group-hover:text-accent-teal transition">Vender Algo</span>
+      <p class="text-xs text-gray-400 mt-2 text-center">Sube tu producto gratis</p>
+    </div>
+
+    <!-- Lista de Productos -->
+    @for (item of mercadoData; track item.id) {
+    <div
+      class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden hover:transform hover:-translate-y-1 transition duration-300 border border-white/5 flex flex-col">
+      <!-- Imagen -->
+      <div class="relative h-56">
+        <img [src]="item.imagen" class="w-full h-full object-cover" [alt]="item.titulo">
+        <div class="absolute top-2 right-2 bg-black/60 backdrop-blur px-2 py-1 rounded text-xs text-white font-bold">
+          {{item.categoria}}
+        </div>
+      </div>
+
+      <div class="p-4 flex-1 flex flex-col">
+        <h3 class="text-lg font-semibold text-white mb-1 line-clamp-2 min-h-[3.5rem]">{{item.titulo}}</h3>
+
+        <div class="flex justify-between items-end mt-auto">
+          <div>
+            <!-- Precio con estilo condicional -->
+            <p class="text-2xl font-bold" [class]="item.tipo === 'Venta' ? 'text-accent-teal' : 'text-accent-cyan'">
+              {{ item.tipo === 'Venta' ? (item.precio | currency) : item.tipo }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              {{item.vendedor}}
+            </p>
+          </div>
+        </div>
+
+        <button class="w-full mt-4 font-bold py-2 px-4 rounded-lg hover:bg-opacity-80 transition"
+          [class]="item.tipo === 'Venta' ? 'bg-accent-teal text-primary-dark' : 'bg-white/10 text-white hover:bg-white/20'">
+          Contactar
+        </button>
+      </div>
+    </div>
+    }
+
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <title>9Sito</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- ============================================== -->
+  <!-- 1. CARGAMOS TAILWIND CSS (CDN)                 -->
+  <!-- ============================================== -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ============================================== -->
+  <!-- 2. TU CONFIGURACIÓN DE COLORES PERSONALIZADOS  -->
+  <!-- ============================================== -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Colores base del fondo degradado
+            'primary-dark': '#1a103c',
+            'primary-light': '#3a1c5b',
+
+            // Colores de acento
+            'accent-teal': '#10e3a4',
+            'accent-cyan': '#00b4d8',
+
+            // Colores para efecto glass
+            'glass-bg': 'rgba(26, 26, 46, 0.4)',
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Fuentes de Google (Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos globales básicos para asegurar altura completa -->
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background-color: #1a103c;
+    }
+  </style>
+</head>
+
+<body>
+  <app-root></app-root>
+</body>
+
+</html>

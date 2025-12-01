@@ -1,0 +1,75 @@
+<div id="page-calendario" class="page-content animate-fade-in">
+  <header class="mb-8">
+    <h1 class="text-4xl font-bold text-white">Calendario Institucional</h1>
+    <p class="text-lg text-gray-400">Eventos, exámenes y fechas importantes de la UTL.</p>
+  </header>
+
+  <!-- Controles -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+    <div class="flex items-center space-x-2">
+      <button class="p-2 bg-white/5 rounded-lg hover:bg-white/20 transition text-white">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <h2 class="text-2xl font-semibold text-white">Noviembre 2025</h2>
+      <button class="p-2 bg-white/5 rounded-lg hover:bg-white/20 transition text-white">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="flex space-x-2 mt-4 sm:mt-0">
+      <button
+        class="bg-accent-teal text-primary-dark font-semibold py-2 px-4 rounded-lg hover:bg-opacity-80 transition shadow-lg shadow-accent-teal/20">Mes</button>
+      <button
+        class="bg-white/5 text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 border border-white/5 transition">Agenda</button>
+    </div>
+  </div>
+
+  <!-- Mockup de Calendario -->
+  <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden border border-white/5">
+
+    <!-- Días de la semana -->
+    <div class="grid grid-cols-7 gap-px bg-white/10 border-b border-white/10">
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Dom</div>
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Lun</div>
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Mar</div>
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Mié</div>
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Jue</div>
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Vie</div>
+      <div class="p-4 text-center font-bold text-gray-300 uppercase text-xs tracking-wider">Sáb</div>
+    </div>
+
+    <!-- Grid de Días (Dinámico) -->
+    <div class="grid grid-cols-7 gap-px bg-white/5">
+
+      @for (dia of diasCalendario; track $index) {
+      <div
+        class="min-h-[100px] p-2 bg-glass-bg hover:bg-white/5 transition relative border-r border-b border-white/5 flex flex-col items-end">
+
+        <!-- Número del día -->
+        <span class="text-sm font-medium mb-1" [class]="dia.esMesActual ? 'text-white' : 'text-gray-600'">
+          {{dia.numero}}
+        </span>
+
+        <!-- Eventos del día -->
+        @if (dia.eventos.length > 0) {
+        <div class="w-full flex flex-col gap-1">
+          @for (evento of dia.eventos; track evento.titulo) {
+          <div class="text-[10px] px-1.5 py-0.5 rounded truncate font-semibold w-full text-left" [class]="evento.tipo === 'suspension' ? 'bg-red-500/20 text-red-300' :
+                          evento.tipo === 'inicio' ? 'bg-accent-cyan/20 text-accent-cyan' :
+                          'bg-accent-teal/20 text-accent-teal'">
+            {{evento.titulo}}
+          </div>
+          }
+        </div>
+        }
+
+      </div>
+      }
+
+    </div>
+  </div>
+</div>

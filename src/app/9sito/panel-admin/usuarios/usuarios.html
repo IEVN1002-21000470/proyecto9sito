@@ -1,0 +1,81 @@
+<header class="mb-8 animate-fade-in flex justify-between items-center">
+  <div>
+    <h1 class="text-4xl font-bold text-white">Gestión de Usuarios</h1>
+    <p class="text-lg text-gray-400">Administra roles y accesos.</p>
+  </div>
+  <!-- Botón para crear usuario (puedes agregar routerLink="crear" si tienes esa ruta) -->
+  <button
+    class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+    </svg>
+    Nuevo Usuario
+  </button>
+</header>
+
+<div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden animate-fade-in border border-white/5">
+  <!-- Barra de búsqueda -->
+  <div class="p-4 border-b border-white/10">
+    <div class="relative">
+      <input type="text" placeholder="Buscar por nombre o correo..."
+        class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:border-purple-500 transition placeholder-gray-500">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <table class="w-full text-left text-gray-300">
+    <thead class="bg-black/20 text-purple-200 uppercase text-xs font-bold">
+      <tr>
+        <th class="p-4">Usuario</th>
+        <th class="p-4">Rol</th>
+        <th class="p-4">Estado</th>
+        <th class="p-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-white/5">
+      @for (user of usuarios; track user.id) {
+      <tr class="hover:bg-white/5 transition duration-200">
+        <td class="p-4">
+          <div class="font-bold text-white">{{user.nombre}}</div>
+          <div class="text-xs text-gray-500">{{user.correo}}</div>
+        </td>
+        <td class="p-4">
+          <!-- Badges de Rol con colores dinámicos -->
+          <span class="px-2 py-1 rounded text-xs font-bold border" [class]="user.rol === 'Admin' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                     user.rol === 'Docente' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                     'bg-green-500/10 text-green-400 border-green-500/20'">
+            {{user.rol}}
+          </span>
+        </td>
+        <td class="p-4">
+          <span class="flex items-center gap-2 text-sm font-medium">
+            <span class="w-2 h-2 rounded-full shadow-[0_0_8px]"
+              [class]="user.estado === 'Activo' ? 'bg-green-500 shadow-green-500/50' : 'bg-gray-500 shadow-gray-500/50'"></span>
+            <span [class]="user.estado === 'Activo' ? 'text-white' : 'text-gray-500'">{{user.estado}}</span>
+          </span>
+        </td>
+        <td class="p-4 text-right">
+          <button class="text-gray-400 hover:text-white mr-3 transition p-1 hover:bg-white/10 rounded"
+            title="Editar Rol">
+            <!-- Icono: Pencil -->
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+            </svg>
+          </button>
+          <button (click)="alternarEstadoUsuario(user)" class="font-bold text-xs border px-2 py-1 rounded transition"
+            [class]="user.estado === 'Activo' ? 'text-red-400 border-red-500/30 hover:bg-red-500/10' : 'text-green-400 border-green-500/30 hover:bg-green-500/10'">
+            {{ user.estado === 'Activo' ? 'Desactivar' : 'Activar' }}
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

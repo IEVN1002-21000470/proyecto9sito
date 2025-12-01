@@ -1,0 +1,45 @@
+<div class="animate-fade-in">
+  <header class="mb-8">
+    <h1 class="text-4xl font-bold text-white">Bolsa de Trabajo</h1>
+    <p class="text-lg text-gray-400">Encuentra tu próxima oportunidad de estadía o empleo.</p>
+
+    <!-- Filtros -->
+    <div class="flex gap-3 mt-6">
+      <button class="px-4 py-2 bg-accent-teal text-primary-dark rounded-full font-bold text-sm">Todos</button>
+      <button
+        class="px-4 py-2 bg-white/10 text-gray-300 hover:bg-white/20 rounded-full text-sm transition">Estadías</button>
+      <button class="px-4 py-2 bg-white/10 text-gray-300 hover:bg-white/20 rounded-full text-sm transition">Medio
+        Tiempo</button>
+    </div>
+  </header>
+
+  <!-- Grid de Vacantes -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    @for (vacante of vacantesData; track vacante.id) {
+    <div
+      class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 border border-white/5 hover:border-accent-teal/50 transition-all relative overflow-hidden group">
+      <div class="flex items-center mb-4">
+        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-primary-dark font-bold text-xl">
+          {{vacante.empresa.charAt(0)}}
+        </div>
+        <div class="ml-3">
+          <h3 class="text-lg font-semibold text-white">{{vacante.puesto}}</h3>
+          <p class="text-sm text-gray-400">{{vacante.empresa}}</p>
+        </div>
+      </div>
+      <div class="space-y-2 mb-4">
+        <div class="flex items-center text-sm text-gray-300">
+          <span class="mr-2">⏱️</span> {{vacante.tipo}}
+        </div>
+        <div class="flex items-center text-sm text-gray-300">
+          <span class="mr-2">📍</span> {{vacante.ubicacion}}
+        </div>
+      </div>
+      <button
+        class="w-full py-2 border border-accent-teal text-accent-teal rounded-lg hover:bg-accent-teal hover:text-primary-dark transition font-semibold">
+        Ver Detalles
+      </button>
+    </div>
+    }
+  </div>
+</div>

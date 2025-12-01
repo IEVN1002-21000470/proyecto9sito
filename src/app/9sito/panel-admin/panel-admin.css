@@ -1,0 +1,30 @@
+/* Estilos para el scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111827; /* gray-900 un poco más oscuro */
+}
+::-webkit-scrollbar-thumb {
+  background: #581c87; /* purple-900 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7e22ce; /* purple-700 */
+}
+
+/* Animación fade-in */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
