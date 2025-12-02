@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './9sito/login/login.component';
+import { RegistroAdminComponent } from './9sito/registro-admin/registro-admin.component';
 
 export const routes: Routes = [
     // Redirección inicial
@@ -83,5 +85,73 @@ export const routes: Routes = [
             },
             { path: '', redirectTo: 'dashboardAdmin', pathMatch: 'full' }
         ]
-    }
-];
+    },
+
+    // ==========================================
+    // RUTAS DEL PANEL DE DOCENTES
+    // ==========================================
+    {
+        path: 'docente',
+        loadComponent: () => import('./9sito/panel-docentes/panel-docentes.component').then(m => m.PanelDocentesComponent),
+        children: [
+         {
+                path: 'dashboard',
+                loadComponent: () => import('./9sito/panel-docentes/dashboard/dashboard.component').then(m => m.DashboardDocentesComponent)
+            },
+            {
+                path: 'avisos',
+                loadComponent: () => import('./9sito/panel-docentes/avisos/avisos.component').then(m => m.AvisosDocentesComponent)
+            },
+            // {
+            //       path: 'bolsa',
+            //     loadComponent: () => import('./9sito/panel-alumnos/bolsa/bolsa.component').then(m => m.BolsaComponent)
+            // },
+            // {
+            //     path: 'raites',
+            //     loadComponent: () => import('./9sito/panel-alumnos/raites/raites.component').then(m => m.RaitesComponent)
+            // },
+            {
+                path: 'cursos',
+                loadComponent: () => import('./9sito/panel-docentes/cursos/cursos.component').then(m => m.CursosDocentesComponent)
+            },
+            // {
+            //     path: 'mercado',
+            //     loadComponent: () => import('./9sito/panel-alumnos/mercado/mercado.component').then(m => m.MercadoComponent)
+            // },
+            {
+                path: 'calendario',
+                loadComponent: () => import('./9sito/panel-docentes/calendario/calendario.component').then(m => m.CalendarioDocentesComponent)
+            },
+            {
+                path: 'directorio',
+                loadComponent: () => import('./9sito/panel-docentes/directorio/directorio.component').then(m => m.DirectorioDocentesComponent)
+            },
+            {
+                path: 'configuracion',
+                loadComponent: () => import('./9sito/panel-docentes/configuracion/configuracion.component').then(m => m.ConfiguracionDocentesComponent)
+            },
+
+            {
+                path: 'perfil',
+                loadComponent: () => import('./9sito/panel-docentes/perfil/perfil.component').then(m => m.PerfilDocentesComponent)
+            },
+
+            { path: '', redirectTo: 'dashboardDocentes', pathMatch: 'full' }
+              ]
+            },
+        // ==========================================
+        // RUTAS DEL LOGIN
+        // ==========================================
+            {
+                path: 'login',
+                loadComponent: () => import('./9sito/login/login.component').then(m => m.LoginComponent)
+            },
+        // ==========================================
+        // RUTAS DEL REGISTRO
+        // ==========================================
+            {
+              path: 'registro',
+              loadComponent: () => import('./9sito/registro-admin/registro-admin.component').then(m => m.RegistroAdminComponent)
+            },
+
+  ];
