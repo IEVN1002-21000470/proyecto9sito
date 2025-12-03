@@ -1,16 +1,20 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { noAuthGuard } from './guards/no-auth.guard';
+import { adminGuard } from './guards/admin.guard';
 import { LoginComponent } from './9sito/login/login.component';
 import { RegistroAdminComponent } from './9sito/registro-admin/registro-admin.component';
 
 export const routes: Routes = [
     // Redirección inicial
-    { path: '', redirectTo: 'alumno/dashboard', pathMatch: 'full' },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     // ==========================================
     // RUTAS DEL PANEL DE ALUMNOS
     // ==========================================
     {
         path: 'alumno',
+        canActivate: [authGuard],
         // Carga el Layout (Barra lateral)
         loadComponent: () => import('./9sito/panel-alumnos/panel-alumnos.component').then(m => m.PanelAlumnosComponent),
         children: [
@@ -65,6 +69,7 @@ export const routes: Routes = [
     // ==========================================
     {
         path: 'admin',
+        canActivate: [authGuard],
         loadComponent: () => import('./9sito/panel-admin/panel-admin.component').then(m => m.PanelAdminComponent),
         children: [
             {
@@ -92,6 +97,7 @@ export const routes: Routes = [
     // ==========================================
     {
         path: 'docente',
+        canActivate: [authGuard],
         loadComponent: () => import('./9sito/panel-docentes/panel-docentes.component').then(m => m.PanelDocentesComponent),
         children: [
          {
@@ -144,6 +150,7 @@ export const routes: Routes = [
         // ==========================================
             {
                 path: 'login',
+                canActivate: [noAuthGuard],
                 loadComponent: () => import('./9sito/login/login.component').then(m => m.LoginComponent)
             },
         // ====================================== ====
@@ -151,6 +158,7 @@ export const routes: Routes = [
         // ==========================================
             {
               path: 'registro',
+              canActivate: [adminGuard],
               loadComponent: () => import('./9sito/registro-admin/registro-admin.component').then(m => m.RegistroAdminComponent)
             },
 

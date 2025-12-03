@@ -3,16 +3,17 @@
     <div class="logo">
       <img src="9sito.png" alt="Logo de 9C" class="logo-img">
     </div>
-    <h1>Registro Administrativo</h1>
-    <p class="subtitle">Crea tu cuenta para gestionar el portal.</p>
+
+    <h1>Registro de Usuarios</h1>
+    <p class="subtitle">Panel de alta de nuevos miembros.</p>
     <hr class="separator">
 
     <div class="access-info">
-      <p>Tu rol de administrador permite:</p>
+      <p>Instrucciones:</p>
       <ul>
-        <li><b>Publicar</b> noticias y comunicados oficiales.</li>
-        <li><b>Modificar</b> contenido principal del portal.</li>
-        <li><b>Gestionar</b> eventos y recursos académicos.</li>
+        <li><b>Estudiantes:</b> Tienen acceso a Raites, Mercado y Bolsa.</li>
+        <li><b>Docentes:</b> Acceso a calendario académico y cursos.</li>
+        <li><b>Administradores:</b> Gestión total del sistema.</li>
       </ul>
     </div>
   </div>
@@ -21,28 +22,80 @@
     <div class="login-box">
       <div class="header-logo-form">
         <img src="9sito.png" alt="Logo de 9C" class="small-logo-img">
-        <h2>Registro de Admin</h2>
+        <h2>Alta de Usuario</h2>
       </div>
 
-      <form action="#" method="POST">
-        <label for="institutional-email" class="form-label">CORREO INSTITUCIONAL</label>
-        <input type="email" id="institutional-email" name="email" required>
+      <form (ngSubmit)="registrar()">
+
+        <!-- SELECTOR DE ROL -->
+        <label for="rol" class="form-label">TIPO DE USUARIO</label>
+        <div class="mb-4 relative">
+          <select 
+            id="rol" 
+            name="rol" 
+            [(ngModel)]="usuario.rol" 
+            class="w-full p-3 bg-white/10 border border-white/20 rounded text-white appearance-none cursor-pointer focus:border-accent-teal outline-none"
+            style="background-color: rgba(255,255,255,0.1);">
+            <option class="bg-[#2c084d]" value="Estudiante">Estudiante</option>
+            <option class="bg-[#2c084d]" value="Docente">Docente</option>
+            <option class="bg-[#2c084d]" value="Admin">Administrador</option>
+          </select>
+        </div>
 
         <label for="unique-key" class="form-label">NOMBRE COMPLETO</label>
-        <input type="text" id="unique-key" name="unique_key" required>
+        <input
+          type="text"
+          id="unique-key"
+          name="nombre"
+          [(ngModel)]="usuario.nombre"
+          required
+          placeholder="Nombre Apellido"
+        >
 
-        <label for="password" class="form-label">CONTRASEÑA</label>
-        <input type="password" id="password" name="password" required>
+        <label for="institutional-email" class="form-label">CORREO INSTITUCIONAL</label>
+        <input
+          type="email"
+          id="institutional-email"
+          name="email"
+          [(ngModel)]="usuario.email"
+          required
+          placeholder="usuario@utleon.edu.mx"
+        >
+
+        <label for="password" class="form-label">CONTRASEÑA PROVISIONAL</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="usuario.password"
+          required
+        >
 
         <label for="confirm-password" class="form-label">CONFIRMAR CONTRASEÑA</label>
-        <input type="password" id="confirm-password" name="confirm_password" required>
+        <input
+          type="password"
+          id="confirm-password"
+          name="confirmPassword"
+          [(ngModel)]="usuario.confirmPassword"
+          required
+        >
 
-        <button type="submit" class="login-button">Registrar Cuenta</button>
+        @if (mensaje) {
+          <div class="p-3 rounded mb-4 text-sm text-center border"
+               [class]="exito ? 'bg-green-500/20 border-green-500 text-green-200' : 'bg-red-500/20 border-red-500 text-red-200'">
+            {{ mensaje }}
+          </div>
+        }
+
+        <button type="submit" class="login-button" [disabled]="cargando">
+          {{ cargando ? 'Registrando...' : 'Registrar Usuario' }}
+        </button>
       </form>
 
       <div class="login-link">
-        <a href="login.html">¿Ya tienes una cuenta? Iniciar sesión</a>
+        <a routerLink="/admin/usuarios">← Volver al listado</a>
       </div>
+
     </div>
   </div>
 </div>

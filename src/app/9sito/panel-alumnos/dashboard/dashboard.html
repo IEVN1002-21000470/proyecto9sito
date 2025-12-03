@@ -7,23 +7,28 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
     <!-- Widget Avisos -->
-    <div class="lg:col-span-2 bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6">
-      <h2 class="text-2xl font-semibold text-white mb-4">Avisos Recientes</h2>
-      <div class="space-y-4">
-        <div class="p-4 bg-white/5 rounded-lg">
-          <h3 class="font-semibold text-accent-cyan">Suspensión de clases por mantenimiento</h3>
-          <p class="text-sm text-gray-300 mt-1">Se informa que el día 5 de Noviembre se suspenderán las actividades...</p>
-          <span class="text-xs text-gray-500">hace 2 horas</span>
-        </div>
-        <div class="p-4 bg-white/5 rounded-lg">
-          <h3 class="font-semibold text-accent-cyan">Conferencia Magna: IA en la Industria 4.0</h3>
-          <p class="text-sm text-gray-300 mt-1">No te pierdas la conferencia este viernes en el auditorio principal.</p>
-          <span class="text-xs text-gray-500">hace 1 día</span>
-        </div>
-        <!-- Enlace corregido -->
-        <a class="text-accent-teal font-medium hover:underline cursor-pointer" routerLink="/alumno/avisos">Ver todos los avisos</a>
+<div class="lg:col-span-2 bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6">
+  <h2 class="text-2xl font-semibold text-white mb-4">Avisos Recientes</h2>
+  
+  <div class="space-y-4">
+    @if (avisosRecientes.length === 0) {
+      <p class="text-gray-400 italic">No hay avisos recientes.</p>
+    }
+
+    @for (aviso of avisosRecientes; track aviso.id) {
+      <div class="p-4 bg-white/5 rounded-lg border-l-2"
+           [class]="aviso.categoria === 'Urgente' ? 'border-red-500' : 'border-accent-teal'">
+        <h3 class="font-semibold text-white">{{aviso.titulo}}</h3>
+        <p class="text-sm text-gray-300 mt-1 line-clamp-1">{{aviso.contenido}}</p>
+        <span class="text-xs text-gray-500">{{aviso.fecha | date:'short'}}</span>
       </div>
-    </div>
+    }
+
+    <a class="text-accent-teal font-medium hover:underline cursor-pointer block mt-4" routerLink="/alumno/avisos">
+      Ver todos los avisos
+    </a>
+  </div>
+</div>
 
     <!-- Widget Cursos -->
     <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6">

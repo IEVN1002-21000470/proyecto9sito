@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; // <--- IMPORTANTE
 
 @Component({
   selector: 'app-panel-admin',
@@ -10,4 +10,13 @@ import { RouterOutlet, RouterLinkActive } from '@angular/router';
   templateUrl: './panel-admin.html',
   styleUrls: ['./panel-admin.css']
 })
-export class PanelAdminComponent {}
+export class PanelAdminComponent {
+
+  // Inyectamos el servicio de autenticación
+  constructor(private authService: AuthService) {}
+
+  // Esta función es la que llamará el botón del HTML
+  cerrarSesion() {
+    this.authService.logout();
+  }
+}

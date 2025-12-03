@@ -1,13 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; // Importar OnInit
 import { CommonModule } from '@angular/common';
-
-interface Aviso {
-  id: number;
-  titulo: string;
-  contenido: string;
-  fecha: string;
-  categoria: string;
-}
+import { AvisosService, Aviso } from '../../../services/avisos.service'; // Importar servicio
 
 @Component({
   selector: 'app-avisos',
@@ -16,28 +9,27 @@ interface Aviso {
   templateUrl: './avisos.html',
   styleUrls: ['./avisos.css']
 })
-export class AvisosComponent {
-  avisosData: Aviso[] = [
-    {
-      id: 1,
-      titulo: 'Suspensión de Actividades',
-      contenido: 'Debido a mantenimiento eléctrico en el edificio C, las clases se suspenden a partir de las 2:00 PM.',
-      fecha: 'Hace 2 horas',
-      categoria: 'Administrativo'
-    },
-    {
-      id: 2,
-      titulo: 'Conferencia de IA',
-      contenido: 'Invitación abierta al auditorio principal para la charla sobre GPT-4 y el futuro del trabajo.',
-      fecha: 'Ayer',
-      categoria: 'Académico'
-    },
-    {
-      id: 3,
-      titulo: 'Torneo de Fútbol Rápido',
-      contenido: 'Inscribe a tu equipo antes del viernes. Habrá premios para los tres primeros lugares.',
-      fecha: 'Hace 3 días',
-      categoria: 'Deportivo'
-    }
-  ];
+export class AvisosComponent implements OnInit {
+  
+  avisosData: Aviso[] = [];
+  cargando: boolean = true;
+
+  constructor(private avisosService: AvisosService) {}
+
+  ngOnInit() {
+    this.cargarAvisos();
+  }
+
+  cargarAvisos() {
+    this.avisosService.getAvisos().subscribe({
+      next: (data) => {
+        this.avisosData = data;
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar avisos', error);
+        this.cargando = false;
+      }
+    });
+  }
 }

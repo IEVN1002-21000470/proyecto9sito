@@ -1,66 +1,88 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 
-interface PublicacionPendiente {
-  id: number;
-  titulo: string;
-  tipo: 'Bolsa' | 'Transporte' | 'Mercado'; // Módulo al que pertenece
-  usuario: string; // Autor
-  fecha: string;
-  detalles?: string; // Descripción breve opcional
-}
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // Importar
+import { CommonModule } from '@angular/common';
+import { AdminService, ItemPendiente } from '../../../services/admin.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-moderacion',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink], 
   templateUrl: './moderacion.html',
   styleUrls: ['./moderacion.css']
 })
-export class ModeracionComponent {
+export class ModeracionComponent implements OnInit {
 
-  // Datos simulados (Mock Data)
-  pendientes: PublicacionPendiente[] = [
-    {
-      id: 1,
-      titulo: 'Practicante de MKT Digital',
-      tipo: 'Bolsa',
-      usuario: 'Empresa XYZ',
-      fecha: 'hace 45 min',
-      detalles: 'Vacante de medio tiempo para redes sociales.'
-    },
-    {
-      id: 2,
-      titulo: 'Raite desde Lomas de Medina',
-      tipo: 'Transporte',
-      usuario: '@luis_reyes',
-      fecha: 'hace 2 horas',
-      detalles: 'Salida 6:40 AM.'
-    },
-    {
-      id: 3,
-      titulo: 'Venta de Calculadora Casio',
-      tipo: 'Mercado',
-      usuario: '@juan_perez',
-      fecha: 'hace 3 horas',
-      detalles: 'Modelo fx-991EX, semi-nueva.'
-    }
-  ];
+  listaPendientes: ItemPendiente[] = [];
+  cargando: boolean = true;
+  procesandoId: number | null = null;
+  
+  // ESTADO DEL FILTRO (Por defecto 'Todos')
+  filtroActual: string = 'Todos';
 
-  // Lógica de aprobación
-  aprobarPublicacion(id: number) {
-    // Aquí iría la llamada al backend para cambiar estado a 'Aprobado'
-    this.pendientes = this.pendientes.filter(p => p.id !== id);
-    // Opcional: Mostrar notificación toast
-    console.log(`Publicación ${id} aprobada.`);
+  constructor(
+    private adminService: AdminService,
+    private cd: ChangeDetectorRef // Inyectar
+  ) {}
+
+  ngOnInit() {
+    this.cargarPendientes();
   }
 
-  // Lógica de rechazo
-  rechazarPublicacion(id: number) {
-    // Aquí iría la llamada al backend para eliminar o rechazar
-    if(confirm('¿Estás seguro de rechazar esta publicación?')) {
-      this.pendientes = this.pendientes.filter(p => p.id !== id);
+cargarPendientes() {
+  this.cargando = true;
+  this.adminService.getPendientes().subscribe({
+    next: (data) => {
+      this.listaPendientes = data;
+      this.cargando = false;
+      this.cd.detectChanges(); // <--- AGREGA ESTO AQUÍ TAMBIÉN
+    },
+    error: (err) => {
+      console.error(err);
+      this.cargando = false;
+      this.cd.detectChanges(); // <--- Y AQUÍ POR SI FALLA
     }
+  });
+}
+
+  // --- LÓGICA DE FILTRADO ---
+  cambiarFiltro(filtro: string) {
+    this.filtroActual = filtro;
+  }
+
+  // Getter mágico: Filtra la lista original según el botón seleccionado
+  get itemsMostrados() {
+    if (this.filtroActual === 'Todos') {
+      return this.listaPendientes;
+    }
+    return this.listaPendientes.filter(item => item.tipo === this.filtroActual);
+  }
+
+  // --- ACCIONES ---
+  ejecutarAccion(item: ItemPendiente, accion: 'aprobar' | 'rechazar') {
+    if (!confirm(`¿Confirmar ${accion}?`)) return;
+
+    this.procesandoId = item.id;
+    
+    this.adminService.moderarItem(item.tipo, item.id, accion).subscribe({
+      next: (res) => {
+        if (res.exito) {
+          // Eliminamos de la lista
+          this.listaPendientes = this.listaPendientes.filter(i => !(i.id === item.id && i.tipo === item.tipo));
+          
+          // FORZAMOS LA VISTA
+          this.cd.detectChanges(); 
+        } else {
+          alert('Error: ' + res.mensaje);
+        }
+        this.procesandoId = null;
+        this.cd.detectChanges(); // Forzamos al terminar
+      },
+      error: () => {
+        alert('Error de conexión.');
+        this.procesandoId = null;
+        this.cd.detectChanges(); // Forzamos al error
+      }
+    });
   }
 }

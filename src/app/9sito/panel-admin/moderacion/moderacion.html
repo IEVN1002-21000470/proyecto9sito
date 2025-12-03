@@ -1,31 +1,37 @@
 <div class="animate-fade-in">
   <header class="mb-8">
     <h1 class="text-4xl font-bold text-white">Gestión de Contenido</h1>
-    <p class="text-lg text-gray-400">Aprobar, editar o eliminar publicaciones de la plataforma.</p>
+    <p class="text-lg text-gray-400">Aprobar, editar o eliminar publicaciones de la comunidad.</p>
   </header>
 
-  <!-- Toolbar -->
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    
     <div class="flex space-x-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto">
+      
       <button
-        class="bg-accent-teal text-primary-dark font-semibold py-2 px-4 rounded-lg whitespace-nowrap shadow-lg shadow-accent-teal/20 hover:bg-opacity-90 transition">
-        Pendientes ({{pendientes.length}})
+        class="bg-accent-teal text-primary-dark font-semibold py-2 px-4 rounded-lg whitespace-nowrap shadow-lg shadow-accent-teal/20 cursor-default">
+        Pendientes ({{listaPendientes.length}})
       </button>
-      <button
-        class="bg-white/5 text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 border border-white/5 transition whitespace-nowrap">
+
+      <button (click)="cambiarFiltro('Todos')"
+        class="font-medium py-2 px-4 rounded-lg border transition whitespace-nowrap"
+        [class]="filtroActual === 'Todos' ? 'bg-white/20 text-white border-white/20' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
         Todos
       </button>
-      <button
-        class="bg-white/5 text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 border border-white/5 transition whitespace-nowrap">
-        Avisos
+
+      <button (click)="cambiarFiltro('Raite')"
+        class="font-medium py-2 px-4 rounded-lg border transition whitespace-nowrap"
+        [class]="filtroActual === 'Raite' ? 'bg-purple-500/30 text-white border-purple-500/50' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
+        Raites
       </button>
-      <button
-        class="bg-white/5 text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 border border-white/5 transition whitespace-nowrap">
-        Bolsa de Trabajo
+
+      <button (click)="cambiarFiltro('Mercado')"
+        class="font-medium py-2 px-4 rounded-lg border transition whitespace-nowrap"
+        [class]="filtroActual === 'Mercado' ? 'bg-orange-500/30 text-white border-orange-500/50' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
+        Mercado
       </button>
     </div>
 
-    <!-- Botón Crear Aviso -->
     <button routerLink="/admin/avisosAdmin"
       class="bg-accent-cyan text-primary-dark font-bold py-3 px-5 rounded-lg hover:bg-opacity-80 transition shadow-lg shadow-accent-cyan/20 flex items-center gap-2">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,54 +41,60 @@
     </button>
   </div>
 
-  <!-- Tabla -->
   <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden border border-white/5">
     <div class="overflow-x-auto">
       <table class="w-full text-left">
+        
         <thead class="border-b border-white/10 bg-white/5">
           <tr>
-            <th class="p-4 text-sm font-semibold uppercase text-gray-400">Título</th>
+            <th class="p-4 text-sm font-semibold uppercase text-gray-400">Descripción / Título</th>
             <th class="p-4 text-sm font-semibold uppercase text-gray-400">Módulo</th>
             <th class="p-4 text-sm font-semibold uppercase text-gray-400">Autor</th>
             <th class="p-4 text-sm font-semibold uppercase text-gray-400">Fecha</th>
             <th class="p-4 text-sm font-semibold uppercase text-gray-400 text-right">Acciones</th>
           </tr>
         </thead>
+
         <tbody class="divide-y divide-white/10">
 
-          @if (pendientes.length === 0) {
-          <tr>
-            <td colspan="5" class="p-8 text-center text-gray-500 italic">
-              No hay publicaciones pendientes de revisión.
-            </td>
-          </tr>
+          @if (cargando) {
+            <tr><td colspan="5" class="p-8 text-center text-gray-400">Cargando datos...</td></tr>
           }
 
-          @for (item of pendientes; track item.id) {
+          @if (!cargando && itemsMostrados.length === 0) {
+            <tr>
+              <td colspan="5" class="p-8 text-center text-gray-500 italic">
+                No hay publicaciones pendientes en esta categoría.
+              </td>
+            </tr>
+          }
+
+          @for (item of itemsMostrados; track item.id + item.tipo) {
           <tr class="hover:bg-white/5 transition duration-200 group">
+            
             <td class="p-4 font-medium text-white">
-              {{item.titulo}}
-              <!-- Badge de detalles extra si existe -->
-              @if(item.detalles) {
-              <p class="text-xs text-gray-500 font-normal mt-1 truncate max-w-[200px]">{{item.detalles}}</p>
-              }
+              {{item.descripcion}}
             </td>
+
             <td class="p-4">
-              <span class="px-2 py-1 rounded text-xs font-bold uppercase border" [class]="item.tipo === 'Bolsa' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                         item.tipo === 'Transporte' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+              <span class="px-2 py-1 rounded text-xs font-bold uppercase border" 
+                [class]="item.tipo === 'Raite' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
                          'bg-orange-500/10 text-orange-400 border-orange-500/20'">
                 {{item.tipo}}
               </span>
             </td>
-            <td class="p-4 text-gray-300 text-sm font-mono">{{item.usuario}}</td>
-            <td class="p-4 text-gray-400 text-sm">{{item.fecha}}</td>
+
+            <td class="p-4 text-gray-300 text-sm font-mono">{{item.autor}}</td>
+
+            <td class="p-4 text-gray-400 text-sm">{{item.fecha | date:'short'}}</td>
+
             <td class="p-4 text-right space-x-2">
-              <button (click)="aprobarPublicacion(item.id)"
-                class="text-xs bg-accent-teal/20 text-accent-teal border border-accent-teal/30 font-bold py-1 px-3 rounded hover:bg-accent-teal hover:text-primary-dark transition">
+              <button (click)="ejecutarAccion(item, 'aprobar')" [disabled]="procesandoId === item.id"
+                class="text-xs bg-accent-teal/20 text-accent-teal border border-accent-teal/30 font-bold py-1 px-3 rounded hover:bg-accent-teal hover:text-primary-dark transition disabled:opacity-50">
                 Aprobar
               </button>
-              <button (click)="rechazarPublicacion(item.id)"
-                class="text-xs bg-red-500/20 text-red-400 border border-red-500/30 font-bold py-1 px-3 rounded hover:bg-red-500 hover:text-white transition">
+              <button (click)="ejecutarAccion(item, 'rechazar')" [disabled]="procesandoId === item.id"
+                class="text-xs bg-red-500/20 text-red-400 border border-red-500/30 font-bold py-1 px-3 rounded hover:bg-red-500 hover:text-white transition disabled:opacity-50">
                 Rechazar
               </button>
             </td>
