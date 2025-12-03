@@ -95,7 +95,7 @@ export const routes: Routes = [
         loadComponent: () => import('./9sito/panel-docentes/panel-docentes.component').then(m => m.PanelDocentesComponent),
         children: [
          {
-                path: 'dashboard',
+                path: 'dashboardDocentes',
                 loadComponent: () => import('./9sito/panel-docentes/dashboard/dashboard.component').then(m => m.DashboardDocentesComponent)
             },
             {
@@ -146,7 +146,7 @@ export const routes: Routes = [
                 path: 'login',
                 loadComponent: () => import('./9sito/login/login.component').then(m => m.LoginComponent)
             },
-        // ==========================================
+        // ====================================== ====
         // RUTAS DEL REGISTRO
         // ==========================================
             {

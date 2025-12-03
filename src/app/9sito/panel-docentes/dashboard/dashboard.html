@@ -1,1 +1,55 @@
-<p>dashboard works!</p>
+<div class="animate-fade-in">
+  <header class="mb-8">
+    <h1 class="text-4xl font-bold text-white">Bienvenido de nuevo</h1>
+    <p class="text-lg text-gray-400">Aquí tienes un resumen de la actividad en 9Sito.</p>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Widget Avisos -->
+    <div class="lg:col-span-2 bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6">
+      <h2 class="text-2xl font-semibold text-white mb-4">Avisos Recientes</h2>
+      <div class="space-y-4">
+        <div class="p-4 bg-white/5 rounded-lg">
+          <h3 class="font-semibold text-accent-cyan">Suspensión de clases por mantenimiento</h3>
+          <p class="text-sm text-gray-300 mt-1">Se informa que el día 5 de Noviembre se suspenderán las actividades...
+          </p>
+          <span class="text-xs text-gray-500">hace 2 horas</span>
+        </div>
+        <div class="p-4 bg-white/5 rounded-lg">
+          <h3 class="font-semibold text-accent-cyan">Conferencia Magna: IA en la Industria 4.0</h3>
+          <p class="text-sm text-gray-300 mt-1">No te pierdas la conferencia este viernes en el auditorio principal.</p>
+          <span class="text-xs text-gray-500">hace 1 día</span>
+        </div>
+        <!-- Enlace corregido -->
+        <a class="text-accent-teal font-medium hover:underline cursor-pointer" routerLink="/docente/avisos">Ver todos los
+          avisos</a>
+      </div>
+    </div>
+
+    <!-- Widget Cursos -->
+    <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6">
+      <h2 class="text-2xl font-semibold text-white mb-4">Próximos Cursos</h2>
+      <div class="space-y-3">
+        <div class="bg-white/5 p-3 rounded-lg">
+          <h3 class="font-semibold text-white">Taller de Figma Avanzado</h3>
+          <p class="text-sm text-gray-400">Inicia: 10 de Noviembre</p>
+        </div>
+        <!-- Enlace corregido -->
+        <a class="inline-block mt-2 text-accent-teal font-medium hover:underline cursor-pointer"
+          routerLink="/docente/cursos">Ver todos los cursos</a>
+      </div>
+    </div>
+
+    <!-- Widget Bolsa -->
+    <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6">
+      <h2 class="text-2xl font-semibold text-white mb-4">Bolsa de Trabajo</h2>
+      <p class="text-gray-300 mb-4">Nuevas vacantes de estadía disponibles.</p>
+      <!-- Botón corregido -->
+      <button
+        class="w-full bg-accent-teal text-primary-dark font-bold py-3 px-4 rounded-lg hover:bg-opacity-80 transition-all"
+        routerLink="/alumno/bolsa">
+        Ver Oportunidades
+      </button>
+    </div>
+  </div>
