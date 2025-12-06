@@ -4,49 +4,139 @@
     <p class="text-lg text-gray-400">Mantente informado de los comunicados de la UTL.</p>
   </header>
 
-  <!-- Filtros -->
-  <div class="flex space-x-2 mb-6">
-    <button
-      class="bg-accent-teal text-primary-dark font-semibold py-2 px-4 rounded-lg hover:bg-opacity-90 transition">Todos</button>
-    <button
-      class="bg-glass-bg text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition border border-white/5">Académico</button>
-    <button
-      class="bg-glass-bg text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition border border-white/5">Cultural</button>
-    <button
-      class="bg-glass-bg text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition border border-white/5">Administrativo</button>
+  <div class="flex flex-wrap gap-3 mb-6">
+
+    <button (click)="cambiarFiltro('Todos')"
+      class="font-semibold py-2 px-4 rounded-lg transition border"
+      [class]="filtroActual === 'Todos' ? 'bg-accent-teal text-primary-dark border-accent-teal' : 'bg-white/10 text-gray-300 border-transparent hover:bg-white/20'">
+      Todos
+    </button>
+
+    <button (click)="cambiarFiltro('Académico')"
+      class="font-medium py-2 px-4 rounded-lg transition border"
+      [class]="filtroActual === 'Académico' ? 'bg-purple-500 text-white border-purple-500' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
+      Académico
+    </button>
+
+    <button (click)="cambiarFiltro('Cultural')"
+      class="font-medium py-2 px-4 rounded-lg transition border"
+      [class]="filtroActual === 'Cultural' ? 'bg-orange-500 text-white border-orange-500' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
+      Cultural
+    </button>
+
+    <button (click)="cambiarFiltro('Administrativo')"
+      class="font-medium py-2 px-4 rounded-lg transition border"
+      [class]="filtroActual === 'Administrativo' ? 'bg-accent-cyan text-primary-dark border-accent-cyan' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
+      Administrativo
+    </button>
+
+    <button (click)="cambiarFiltro('Urgente')"
+      class="font-medium py-2 px-4 rounded-lg transition border"
+      [class]="filtroActual === 'Urgente' ? 'bg-red-500 text-white border-red-500' : 'bg-white/5 text-gray-300 border-white/5 hover:bg-white/10'">
+      Urgente
+    </button>
+
   </div>
 
-  <!-- Contenido -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-  @if (cargando) {
-    <p class="text-white">Cargando avisos...</p>
-  }
+    @if (cargando) {
+      <p class="text-white col-span-2 text-center py-8">Cargando avisos...</p>
+    }
 
-  @for (aviso of avisosData; track aviso.id) {
-    <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6 border-l-4 hover:bg-white/5 transition duration-300"
-         [class]="aviso.categoria === 'Administrativo' ? 'border-accent-cyan' : 
-                  aviso.categoria === 'Académico' ? 'border-purple-500' : 'border-orange-500'">
-      
-      <h3 class="text-2xl font-semibold text-white">{{aviso.titulo}}</h3>
-      
-      <div class="flex justify-between items-center text-xs text-gray-400 uppercase font-bold tracking-wider mt-1">
-        <span>{{aviso.categoria}}</span>
+    @if (!cargando && avisosFiltrados.length === 0) {
+      <div class="col-span-2 text-center py-12 bg-white/5 rounded-xl border border-white/5 border-dashed">
+        <p class="text-gray-400">No hay avisos en esta categoría.</p>
+      </div>
+    }
+
+    @for (aviso of avisosFiltrados; track aviso.id) {
+    <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6 border-l-4 hover:bg-white/5 transition duration-300 flex flex-col"
+         [class]="aviso.categoria === 'Administrativo' ? 'border-accent-cyan' :
+                  aviso.categoria === 'Académico' ? 'border-purple-500' :
+                  aviso.categoria === 'Cultural' ? 'border-orange-500' :
+                  aviso.categoria === 'Urgente' ? 'border-red-500' : 'border-gray-500'">
+
+      <h3 class="text-2xl font-semibold text-white mb-2">{{aviso.titulo}}</h3>
+
+      <div class="flex justify-between items-center text-xs text-gray-400 uppercase font-bold tracking-wider mt-1 mb-4">
+        <span class="px-2 py-1 rounded bg-white/5">{{aviso.categoria}}</span>
         <span>{{aviso.fecha | date:'mediumDate'}}</span>
       </div>
 
       @if (aviso.imagen_url) {
-        <img [src]="aviso.imagen_url" alt="Imagen aviso" class="w-full h-40 object-cover rounded-lg mt-4 mb-2">
+        <div class="w-full h-48 overflow-hidden rounded-lg mt-0 mb-4 bg-black/20">
+           <img [src]="aviso.imagen_url" alt="Imagen aviso" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+        </div>
       }
 
-      <p class="text-gray-300 mt-4 leading-relaxed line-clamp-3">
+      <p class="text-gray-300 leading-relaxed line-clamp-3 mb-4 flex-1">
         {{aviso.contenido}}
       </p>
-      
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-xs text-gray-500">Por: {{aviso.autor}}</span>
-        <a class="text-accent-teal font-medium hover:underline cursor-pointer">Leer más...</a>
+
+      <div class="flex justify-between items-center mt-auto pt-4 border-t border-white/5">
+        <span class="text-xs text-gray-500 flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          {{aviso.autor || 'Sistema'}}
+        </span>
+        <button (click)="verDetalles(aviso)" class="text-accent-teal font-medium hover:underline text-sm flex items-center gap-1">
+          Leer más
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
       </div>
     </div>
-  }
+    }
+  </div>
 </div>
+
+@if (mostrarModal && avisoSeleccionado) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#1a103c] border border-white/10 rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden relative flex flex-col max-h-[90vh]">
+
+      <div class="p-6 border-b border-white/10 bg-white/5 flex justify-between items-start shrink-0">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest px-2 py-1 rounded mb-2 inline-block"
+            [class]="avisoSeleccionado.categoria === 'Urgente' ? 'bg-red-500/20 text-red-300' : 'bg-accent-teal/10 text-accent-teal'">
+            {{avisoSeleccionado.categoria}}
+          </span>
+          <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">{{avisoSeleccionado.titulo}}</h2>
+          <p class="text-gray-400 text-sm mt-1">{{avisoSeleccionado.fecha | date:'fullDate'}}</p>
+        </div>
+        <button (click)="cerrarModal()" class="text-gray-400 hover:text-white transition p-2 rounded-lg hover:bg-white/10">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto custom-scrollbar">
+
+        @if (avisoSeleccionado.imagen_url) {
+          <img [src]="avisoSeleccionado.imagen_url" class="w-full max-h-80 object-cover rounded-xl mb-6 shadow-lg border border-white/5">
+        }
+
+        <div class="prose prose-invert max-w-none text-gray-300 leading-relaxed whitespace-pre-line text-lg">
+          {{avisoSeleccionado.contenido}}
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-bold">
+              {{avisoSeleccionado.autor ? avisoSeleccionado.autor.charAt(0) : 'S'}}
+            </div>
+            <div>
+              <p class="text-sm font-bold text-white">Publicado por</p>
+              <p class="text-xs text-gray-400">{{avisoSeleccionado.autor || 'Administración'}}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="p-4 border-t border-white/10 bg-white/5 flex justify-end shrink-0">
+        <button (click)="cerrarModal()" class="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-lg font-bold transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

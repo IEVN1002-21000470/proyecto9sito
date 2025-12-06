@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core'; // Importar OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AvisosService, Aviso } from '../../../services/avisos.service'; // Importar servicio
+import { AvisosService, Aviso } from '../../../services/avisos.service';
 
 @Component({
   selector: 'app-avisos',
@@ -10,9 +10,16 @@ import { AvisosService, Aviso } from '../../../services/avisos.service'; // Impo
   styleUrls: ['./avisos.css']
 })
 export class AvisosComponent implements OnInit {
-  
+
   avisosData: Aviso[] = [];
   cargando: boolean = true;
+
+  // Filtros
+  filtroActual: string = 'Todos';
+
+  // Modal
+  mostrarModal: boolean = false;
+  avisoSeleccionado: Aviso | null = null;
 
   constructor(private avisosService: AvisosService) {}
 
@@ -21,6 +28,7 @@ export class AvisosComponent implements OnInit {
   }
 
   cargarAvisos() {
+    this.cargando = true;
     this.avisosService.getAvisos().subscribe({
       next: (data) => {
         this.avisosData = data;
@@ -31,5 +39,28 @@ export class AvisosComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  // --- FILTROS ---
+  cambiarFiltro(categoria: string) {
+    this.filtroActual = categoria;
+  }
+
+  get avisosFiltrados() {
+    if (this.filtroActual === 'Todos') {
+      return this.avisosData;
+    }
+    return this.avisosData.filter(aviso => aviso.categoria === this.filtroActual);
+  }
+
+  // --- MODAL ---
+  verDetalles(aviso: Aviso) {
+    this.avisoSeleccionado = aviso;
+    this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.avisoSeleccionado = null;
   }
 }

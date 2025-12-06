@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service'; // Importar tu servic
   styleUrls: ['./login.css'] // Corregí styleUrl a styleUrls (plural)
 })
 export class LoginComponent {
-  
+
   // Variables para el formulario
   email: string = '';
   password: string = '';
@@ -32,17 +32,17 @@ export class LoginComponent {
       next: (res) => {
         if (res.exito) {
           console.log('Login correcto:', res.usuario);
-          
-          // Redirección inteligente basada en el ROL
+
+          // LÓGICA CORREGIDA: Solo permitimos Admin y Alumno
           if (res.usuario.rol === 'Admin') {
             this.router.navigate(['/admin/dashboardAdmin']);
-          } else if (res.usuario.rol === 'Docente') {
-            this.router.navigate(['/docente/dashboardDocentes']);
           } else {
+            // Si es Alumno (o Docente por error), lo mandamos al panel de Alumnos
+            // Así evitamos errores de "ruta no encontrada"
             this.router.navigate(['/alumno/dashboard']);
           }
         } else {
-          this.mensajeError = res.mensaje; // "Contraseña incorrecta", etc.
+          this.mensajeError = res.mensaje;
         }
       },
       error: (err) => {

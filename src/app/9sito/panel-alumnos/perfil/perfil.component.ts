@@ -1,41 +1,86 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-
-interface UsuarioPerfil {
-  nombre: string;
-  correo: string;
-  rol: string;
-  telefono?: string;
-  bio?: string;
-  avatar: string;
-  publicacionesMercado: number;
-  publicacionesRaites: number;
-}
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css']
 })
-export class PerfilComponent {
+export class PerfilComponent implements OnInit {
 
-  // Datos simulados del usuario logueado
-  usuario: UsuarioPerfil = {
-    nombre: 'Usuario Demo',
-    correo: 'al123456@utleon.edu.mx',
-    rol: 'Estudiante',
-    telefono: '', // Vacío para probar placeholder
-    avatar: 'https://ui-avatars.com/api/?name=Usuario+Demo&background=10e3a4&color=1a103c&font-size=0.5',
-    publicacionesMercado: 2, // Simula que tiene 2 ventas activas
-    publicacionesRaites: 0   // Simula que no tiene raites
+  usuario: any = {
+    id: 0,
+    nombre: '',
+    correo: '',
+    rol: '',
+    telefono: '',
+    bio: '',
+    avatar: '',
+    publicacionesMercado: 0,
+    publicacionesRaites: 0
   };
 
-  // Método placeholder para guardar
+  guardando: boolean = false;
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.cargarDatosUsuario();
+  }
+
+  cargarDatosUsuario() {
+    const user = this.authService.usuarioActual;
+
+    if (user) {
+      this.usuario = {
+        id: user.id,
+        nombre: user.nombre,
+        correo: user.correo || 'No disponible', // <--- Se llenará si el login es correcto
+        rol: user.rol,
+        telefono: user.telefono || '',
+        bio: user.bio || '',
+        avatar: user.foto_url
+          ? `http://localhost:5000/uploads/${user.foto_url}`
+          : `https://ui-avatars.com/api/?name=${user.nombre}&background=10e3a4&color=1a103c&font-size=0.5`,
+        publicacionesMercado: 0,
+        publicacionesRaites: 0
+      };
+
+      // Llamada a la API de estadísticas
+      this.authService.obtenerEstadisticasUsuario(user.id).subscribe({
+        next: (res) => {
+          if (res.exito) {
+            this.usuario.publicacionesMercado = res.ventas;
+            this.usuario.publicacionesRaites = res.raites;
+          }
+        },
+        error: (err) => console.error('Error cargando stats', err)
+      });
+    }
+  }
+
   guardarCambios() {
-    // Aquí iría la lógica para enviar el formulario a Flask
-    console.log('Guardando perfil...');
+    this.guardando = true;
+    const datosEnviar = {
+      telefono: this.usuario.telefono,
+      bio: this.usuario.bio
+    };
+
+    this.authService.actualizarPerfil(this.usuario.id, datosEnviar).subscribe({
+      next: (res) => {
+        this.guardando = false;
+        if (res.exito) alert('¡Perfil actualizado!');
+        else alert('Error: ' + res.mensaje);
+      },
+      error: () => {
+        this.guardando = false;
+        alert('Error de conexión.');
+      }
+    });
   }
 }

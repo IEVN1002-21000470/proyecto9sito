@@ -9,7 +9,7 @@ import { PanelDocentesComponent } from './9sito/panel-docentes/panel-docentes.co
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, PanelAlumnosComponent, PanelAdminComponent,PanelDocentesComponent ],
+  imports: [CommonModule, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

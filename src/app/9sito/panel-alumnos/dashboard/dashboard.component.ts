@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core'; // Importar OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AvisosService, Aviso } from '../../../services/avisos.service'; // Importar servicio
+import { AvisosService, Aviso } from '../../../services/avisos.service';
+import { InfoAcademicaService } from '../../../services/info-academica.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,16 +12,31 @@ import { AvisosService, Aviso } from '../../../services/avisos.service'; // Impo
   styleUrls: ['./dashboard.css']
 })
 export class DashboardComponent implements OnInit {
-  
-  avisosRecientes: Aviso[] = [];
 
-  constructor(private avisosService: AvisosService) {}
+  avisosRecientes: Aviso[] = [];
+  cursosRecientes: any[] = [];
+
+  constructor(
+    private avisosService: AvisosService,
+    private infoService: InfoAcademicaService
+  ) {}
 
   ngOnInit() {
-    // Reutilizamos el servicio para traer todo, pero en el HTML solo mostramos los primeros 2
-    this.avisosService.getAvisos().subscribe(data => {
-      // Tomamos solo los 3 más recientes
-      this.avisosRecientes = data.slice(0, 3);
+    // 1. Cargar Avisos (Últimos 3)
+    this.avisosService.getAvisos().subscribe({
+      next: (data) => {
+        // Asumiendo que vienen ordenados por fecha desde el backend
+        this.avisosRecientes = data.slice(0, 3);
+      },
+      error: (err) => console.error(err)
+    });
+
+    // 2. Cargar Cursos (Últimos 3)
+    this.infoService.getCursos().subscribe({
+      next: (data) => {
+        this.cursosRecientes = data.slice(0, 3);
+      },
+      error: (err) => console.error(err)
     });
   }
 }

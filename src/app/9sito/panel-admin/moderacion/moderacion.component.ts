@@ -1,87 +1,63 @@
-
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // Importar
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService, ItemPendiente } from '../../../services/admin.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-moderacion',
   standalone: true,
-  imports: [CommonModule, RouterLink], 
+  imports: [CommonModule],
   templateUrl: './moderacion.html',
   styleUrls: ['./moderacion.css']
 })
 export class ModeracionComponent implements OnInit {
 
-  listaPendientes: ItemPendiente[] = [];
+  pendientes: ItemPendiente[] = [];
   cargando: boolean = true;
   procesandoId: number | null = null;
-  
-  // ESTADO DEL FILTRO (Por defecto 'Todos')
-  filtroActual: string = 'Todos';
 
   constructor(
     private adminService: AdminService,
-    private cd: ChangeDetectorRef // Inyectar
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.cargarPendientes();
   }
 
-cargarPendientes() {
-  this.cargando = true;
-  this.adminService.getPendientes().subscribe({
-    next: (data) => {
-      this.listaPendientes = data;
-      this.cargando = false;
-      this.cd.detectChanges(); // <--- AGREGA ESTO AQUÍ TAMBIÉN
-    },
-    error: (err) => {
-      console.error(err);
-      this.cargando = false;
-      this.cd.detectChanges(); // <--- Y AQUÍ POR SI FALLA
-    }
-  });
-}
-
-  // --- LÓGICA DE FILTRADO ---
-  cambiarFiltro(filtro: string) {
-    this.filtroActual = filtro;
+  cargarPendientes() {
+    this.cargando = true;
+    this.adminService.getPendientes().subscribe({
+      next: (data) => {
+        this.pendientes = data;
+        this.cargando = false;
+        this.cd.detectChanges(); // Forzar actualización de vista
+      },
+      error: (err) => {
+        console.error(err);
+        this.cargando = false;
+        this.cd.detectChanges();
+      }
+    });
   }
 
-  // Getter mágico: Filtra la lista original según el botón seleccionado
-  get itemsMostrados() {
-    if (this.filtroActual === 'Todos') {
-      return this.listaPendientes;
-    }
-    return this.listaPendientes.filter(item => item.tipo === this.filtroActual);
-  }
-
-  // --- ACCIONES ---
-  ejecutarAccion(item: ItemPendiente, accion: 'aprobar' | 'rechazar') {
-    if (!confirm(`¿Confirmar ${accion}?`)) return;
-
+  procesar(item: ItemPendiente, accion: 'aprobar' | 'rechazar') {
     this.procesandoId = item.id;
-    
+
     this.adminService.moderarItem(item.tipo, item.id, accion).subscribe({
-      next: (res) => {
+      next: (res: any) => {
+        this.procesandoId = null;
         if (res.exito) {
-          // Eliminamos de la lista
-          this.listaPendientes = this.listaPendientes.filter(i => !(i.id === item.id && i.tipo === item.tipo));
-          
-          // FORZAMOS LA VISTA
-          this.cd.detectChanges(); 
+          // Quitamos el elemento de la lista localmente para que desaparezca al instante
+          this.pendientes = this.pendientes.filter(p => !(p.id === item.id && p.tipo === item.tipo));
         } else {
           alert('Error: ' + res.mensaje);
         }
-        this.procesandoId = null;
-        this.cd.detectChanges(); // Forzamos al terminar
+        this.cd.detectChanges();
       },
       error: () => {
-        alert('Error de conexión.');
         this.procesandoId = null;
-        this.cd.detectChanges(); // Forzamos al error
+        alert('Error de conexión al moderar.');
+        this.cd.detectChanges();
       }
     });
   }

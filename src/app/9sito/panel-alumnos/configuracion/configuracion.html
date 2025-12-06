@@ -5,12 +5,18 @@
   </header>
 
   <div class="space-y-6">
-    <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6">
+    <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 border border-white/5">
       <h3 class="font-bold text-white mb-4 border-b border-white/10 pb-2">Reportar Problema</h3>
-      <textarea class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white mb-4 h-32"
-        placeholder="Describe el error técnico..."></textarea>
-      <button class="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-lg font-bold transition">Enviar
-        Reporte</button>
+
+      <textarea
+        [(ngModel)]="descripcionReporte"
+        class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white mb-4 h-32 outline-none focus:border-accent-teal transition resize-none placeholder-gray-500"
+        placeholder="Describe el error técnico o situación..."></textarea>
+
+      <button (click)="enviarReporte()" [disabled]="enviando"
+        class="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-lg font-bold transition disabled:opacity-50 border border-white/5">
+        {{ enviando ? 'Enviando...' : 'Enviar Reporte' }}
+      </button>
     </div>
   </div>
 </div>

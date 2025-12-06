@@ -1,17 +1,109 @@
-<header class="mb-8 animate-fade-in">
-  <h1 class="text-4xl font-bold text-white">Cursos y Talleres</h1>
-  <p class="text-lg text-gray-400">Desarrolla nuevas habilidades.</p>
-</header>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-  @for (curso of cursosData; track curso.id) {
-  <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden hover:transform hover:-translate-y-1 transition duration-300">
-    <div class="h-32 bg-gradient-to-r from-purple-600 to-indigo-600"></div>
-    <div class="p-6">
-      <span class="text-xs bg-white/10 text-white px-2 py-1 rounded mb-2 inline-block">{{curso.modalidad}}</span>
-      <h3 class="text-xl font-bold text-white mb-2">{{curso.titulo}}</h3>
-      <p class="text-gray-400 text-sm mb-4">Fecha: {{curso.fecha}}</p>
-      <button class="w-full bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg font-bold transition">Inscribirme</button>
+<div class="animate-fade-in">
+  <header class="mb-8">
+    <h1 class="text-4xl font-bold text-white">Cursos y Talleres</h1>
+    <p class="text-lg text-gray-400">Desarrolla nuevas habilidades complementarias.</p>
+  </header>
+
+  @if (cargando) {
+    <p class="text-center text-gray-400 py-10">Cargando oferta académica...</p>
+  }
+
+  @if (!cargando && cursosData.length === 0) {
+    <div class="text-center py-12 bg-white/5 rounded-xl border border-white/5 border-dashed">
+      <p class="text-gray-400 mb-2">No hay cursos disponibles por el momento.</p>
+    </div>
+  }
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (curso of cursosData; track curso.id) {
+    <div
+      class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden hover:transform hover:-translate-y-1 transition duration-300 border border-white/5 flex flex-col">
+
+      <div class="h-32 bg-gradient-to-r"
+           [class]="curso.modalidad === 'Virtual' ? 'from-blue-600 to-cyan-600' :
+                    curso.modalidad === 'Híbrido' ? 'from-purple-600 to-pink-600' :
+                    'from-green-600 to-teal-600'">
+      </div>
+
+      <div class="p-6 flex-1 flex flex-col">
+        <div>
+          <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded mb-3 inline-block bg-white/10 text-white border border-white/10">
+            {{curso.modalidad}}
+          </span>
+
+          <h3 class="text-xl font-bold text-white mb-2 line-clamp-2" title="{{curso.titulo}}">
+            {{curso.titulo}}
+          </h3>
+
+          <div class="flex items-center text-gray-400 text-sm mb-4">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            Inicia: {{curso.fecha | date:'longDate'}}
+          </div>
+        </div>
+
+        <button (click)="verInformacion(curso)"
+          class="w-full mt-auto bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg font-bold transition border border-white/10">
+          Ver Información
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+@if (mostrarModal && cursoSeleccionado) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#1a103c] border border-white/10 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
+
+      <div class="p-6 border-b border-white/10 bg-white/5 flex justify-between items-start shrink-0">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-lg flex items-center justify-center text-white text-2xl shadow-lg"
+               [class]="cursoSeleccionado.modalidad === 'Virtual' ? 'bg-blue-600' :
+                        cursoSeleccionado.modalidad === 'Híbrido' ? 'bg-purple-600' :
+                        'bg-green-600'">
+             🎓
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white leading-tight">{{cursoSeleccionado.titulo}}</h2>
+            <p class="text-gray-400 text-sm mt-1 flex items-center gap-2">
+              <span>Inicia: {{cursoSeleccionado.fecha | date:'fullDate'}}</span>
+            </p>
+          </div>
+        </div>
+        <button (click)="cerrarModal()" class="text-gray-400 hover:text-white transition p-1 rounded-lg hover:bg-white/10">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar">
+
+        <div class="flex flex-wrap gap-3">
+          <span class="bg-white/10 text-white border border-white/20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+            Modalidad: {{cursoSeleccionado.modalidad}}
+          </span>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-2 border-b border-white/10 pb-1">Sobre el Curso</h3>
+          <p class="text-gray-300 leading-relaxed whitespace-pre-line text-sm">
+            {{cursoSeleccionado.descripcion || 'No hay descripción disponible para este curso.'}}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="p-4 border-t border-white/10 bg-white/5 flex justify-end gap-3 shrink-0">
+        <button (click)="cerrarModal()"
+          class="px-5 py-2 text-gray-300 font-medium hover:bg-white/10 rounded-lg transition">
+          Cerrar
+        </button>
+        <button (click)="inscribirse()"
+          class="bg-accent-teal text-primary-dark px-6 py-2 rounded-lg font-bold hover:bg-opacity-80 transition shadow-lg shadow-accent-teal/10">
+          Inscribirme
+        </button>
+      </div>
+
     </div>
   </div>
-  }
-</div>
+}

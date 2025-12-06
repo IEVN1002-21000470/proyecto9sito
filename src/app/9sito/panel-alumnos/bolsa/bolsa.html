@@ -3,43 +3,142 @@
     <h1 class="text-4xl font-bold text-white">Bolsa de Trabajo</h1>
     <p class="text-lg text-gray-400">Encuentra tu próxima oportunidad de estadía o empleo.</p>
 
-    <!-- Filtros -->
-    <div class="flex gap-3 mt-6">
-      <button class="px-4 py-2 bg-accent-teal text-primary-dark rounded-full font-bold text-sm">Todos</button>
-      <button
-        class="px-4 py-2 bg-white/10 text-gray-300 hover:bg-white/20 rounded-full text-sm transition">Estadías</button>
-      <button class="px-4 py-2 bg-white/10 text-gray-300 hover:bg-white/20 rounded-full text-sm transition">Medio
-        Tiempo</button>
+    <div class="flex flex-wrap gap-3 mt-6">
+
+      <button (click)="cambiarFiltro('Todos')"
+        class="px-4 py-2 rounded-full font-bold text-sm transition border"
+        [class]="filtroActual === 'Todos' ? 'bg-accent-teal text-primary-dark border-accent-teal' : 'bg-white/10 text-gray-300 border-transparent hover:bg-white/20'">
+        Todos
+      </button>
+
+      <button (click)="cambiarFiltro('Tiempo Completo')"
+        class="px-4 py-2 rounded-full font-bold text-sm transition border"
+        [class]="filtroActual === 'Tiempo Completo' ? 'bg-accent-teal text-primary-dark border-accent-teal' : 'bg-white/10 text-gray-300 border-transparent hover:bg-white/20'">
+        Tiempo Completo
+      </button>
+
+      <button (click)="cambiarFiltro('Medio Tiempo')"
+        class="px-4 py-2 rounded-full font-bold text-sm transition border"
+        [class]="filtroActual === 'Medio Tiempo' ? 'bg-accent-teal text-primary-dark border-accent-teal' : 'bg-white/10 text-gray-300 border-transparent hover:bg-white/20'">
+        Medio Tiempo
+      </button>
+
+      <button (click)="cambiarFiltro('Estadía')"
+        class="px-4 py-2 rounded-full font-bold text-sm transition border"
+        [class]="filtroActual === 'Estadía' ? 'bg-accent-teal text-primary-dark border-accent-teal' : 'bg-white/10 text-gray-300 border-transparent hover:bg-white/20'">
+        Estadías
+      </button>
+
     </div>
   </header>
 
-  <!-- Grid de Vacantes -->
+  @if (cargando) {
+    <p class="text-center text-gray-400 py-10">Cargando vacantes...</p>
+  }
+
+  @if (!cargando && vacantesFiltradas.length === 0) {
+    <div class="col-span-full text-center py-12 bg-white/5 rounded-xl border border-white/5 border-dashed">
+      <p class="text-gray-400 mb-2">No hay vacantes disponibles en esta categoría.</p>
+    </div>
+  }
+
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-    @for (vacante of vacantesData; track vacante.id) {
+
+    @for (vacante of vacantesFiltradas; track vacante.id) {
     <div
-      class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 border border-white/5 hover:border-accent-teal/50 transition-all relative overflow-hidden group">
+      class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 border border-white/5 hover:border-accent-teal/50 transition-all relative overflow-hidden group flex flex-col h-full">
+
       <div class="flex items-center mb-4">
-        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-primary-dark font-bold text-xl">
+        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-primary-dark font-bold text-xl uppercase shadow-lg shrink-0">
           {{vacante.empresa.charAt(0)}}
         </div>
-        <div class="ml-3">
-          <h3 class="text-lg font-semibold text-white">{{vacante.puesto}}</h3>
-          <p class="text-sm text-gray-400">{{vacante.empresa}}</p>
+        <div class="ml-3 overflow-hidden">
+          <h3 class="text-lg font-semibold text-white truncate" title="{{vacante.puesto}}">{{vacante.puesto}}</h3>
+          <p class="text-sm text-gray-400 truncate">{{vacante.empresa}}</p>
         </div>
       </div>
-      <div class="space-y-2 mb-4">
+
+      <div class="space-y-3 mb-6 flex-1">
         <div class="flex items-center text-sm text-gray-300">
-          <span class="mr-2">⏱️</span> {{vacante.tipo}}
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span class="bg-white/10 px-2 py-0.5 rounded text-xs font-bold border border-white/10">{{vacante.tipo}}</span>
         </div>
         <div class="flex items-center text-sm text-gray-300">
-          <span class="mr-2">📍</span> {{vacante.ubicacion}}
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+          <span class="truncate">{{vacante.ubicacion}}</span>
         </div>
       </div>
-      <button
-        class="w-full py-2 border border-accent-teal text-accent-teal rounded-lg hover:bg-accent-teal hover:text-primary-dark transition font-semibold">
+
+      <button (click)="verDetalles(vacante)"
+        class="w-full py-2 border border-accent-teal text-accent-teal rounded-lg hover:bg-accent-teal hover:text-primary-dark transition font-semibold mt-auto">
         Ver Detalles
       </button>
     </div>
     }
   </div>
 </div>
+
+@if (mostrarModal && vacanteSeleccionada) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#1a103c] border border-white/10 rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
+
+      <div class="p-6 border-b border-white/10 bg-white/5 flex justify-between items-start shrink-0">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-white rounded-lg flex items-center justify-center text-primary-dark font-bold text-2xl uppercase">
+            {{vacanteSeleccionada.empresa.charAt(0)}}
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white leading-tight">{{vacanteSeleccionada.puesto}}</h2>
+            <p class="text-accent-cyan font-medium">{{vacanteSeleccionada.empresa}}</p>
+          </div>
+        </div>
+        <button (click)="cerrarModal()" class="text-gray-400 hover:text-white transition p-1 rounded-lg hover:bg-white/10">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar">
+
+        <div class="flex flex-wrap gap-3">
+          <span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{vacanteSeleccionada.tipo}}
+          </span>
+          <span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            {{vacanteSeleccionada.ubicacion}}
+          </span>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-2 border-b border-white/10 pb-1">Descripción del Puesto</h3>
+          <p class="text-gray-300 leading-relaxed whitespace-pre-line text-sm">
+            {{vacanteSeleccionada.descripcion || 'No hay descripción disponible.'}}
+          </p>
+        </div>
+
+        @if (vacanteSeleccionada.requisitos) {
+          <div>
+            <h3 class="text-white font-bold text-lg mb-2 border-b border-white/10 pb-1">Requisitos</h3>
+            <p class="text-gray-300 leading-relaxed whitespace-pre-line text-sm">
+              {{vacanteSeleccionada.requisitos}}
+            </p>
+          </div>
+        }
+
+      </div>
+
+      <div class="p-4 border-t border-white/10 bg-white/5 flex justify-end gap-3 shrink-0">
+        <button (click)="cerrarModal()"
+          class="px-5 py-2 text-gray-300 font-medium hover:bg-white/10 rounded-lg transition">
+          Cerrar
+        </button>
+        <button (click)="aplicar()"
+          class="bg-accent-teal text-primary-dark px-6 py-2 rounded-lg font-bold hover:bg-opacity-80 transition shadow-lg shadow-accent-teal/10">
+          Aplicar a vacante
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

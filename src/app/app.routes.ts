@@ -78,6 +78,7 @@ export const routes: Routes = [
             },
             {
                 path: 'usuarios',
+                // CAMBIO: Importamos UsuariosComponent en lugar de ModeracionComponent
                 loadComponent: () => import('./9sito/panel-admin/usuarios/usuarios.component').then(m => m.UsuariosComponent)
             },
             {

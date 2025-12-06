@@ -1,73 +1,222 @@
-<div id="page-transporte" class="page-content">
+<div id="page-transporte" class="page-content animate-fade-in">
   <header class="mb-8">
     <h1 class="text-4xl font-bold text-white">Transporte (Raites)</h1>
     <p class="text-lg text-gray-400">Conecta con compañeros para compartir viaje.</p>
   </header>
-  <!-- Pestañas -->
-  <div class="flex border-b border-white/20 mb-6" id="raites-tabs">
-    <button class="tab-link active py-3 px-6 text-accent-teal border-b-2 border-accent-teal font-semibold"
-      data-target="tab-ofrezco">Ofrezco Raite</button>
-    <button class="tab-link py-3 px-6 text-gray-400 font-medium" data-target="tab-busco">Busco
-      Raite</button>
+
+  <div class="flex border-b border-white/20 mb-6">
+    <button (click)="pestanaActual = 'ofrezco'"
+      class="py-3 px-6 font-semibold transition border-b-2"
+      [class]="pestanaActual === 'ofrezco' ? 'text-accent-teal border-accent-teal' : 'text-gray-400 border-transparent hover:text-white'">
+      Ofrezco Raite (Conductores)
+    </button>
+    <button (click)="pestanaActual = 'busco'"
+      class="py-3 px-6 font-semibold transition border-b-2"
+      [class]="pestanaActual === 'busco' ? 'text-accent-cyan border-accent-cyan' : 'text-gray-400 border-transparent hover:text-white'">
+      Busco Raite (Pasajeros)
+    </button>
   </div>
 
-  <!-- Contenido de Pestañas -->
-  <div id="tab-ofrezco" class="tab-content active">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-semibold text-white">Raites Disponibles (Conductores)</h2>
-      <button class="bg-accent-teal text-primary-dark font-bold py-2 px-4 rounded-lg hover:bg-opacity-80">+
-        Ofrecer mi Raite</button>
-    </div>
-    <div class="space-y-4">
-      <!-- Raite 1 -->
-      <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 flex items-center">
-        <img class="w-12 h-12 rounded-full object-cover mr-4"
-          src="https://ui-avatars.com/api/?name=Ana+Gomez&background=10e3a4&color=1a103c&font-size=0.5" alt="Avatar">
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-white">Ana Gómez (Conductora)</h3>
-          <p class="text-sm text-gray-300">Ruta: <span class="font-medium">Plaza Mayor ->
-              UTL</span></p>
-          <p class="text-sm text-gray-400">Horario: <span class="font-medium">7:15 AM</span> |
-            Asientos: <span class="font-medium">2 disponibles</span></p>
-        </div>
-        <button class="bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20">Contactar</button>
-      </div>
-      <!-- Raite 2 -->
-      <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 flex items-center">
-        <img class="w-12 h-12 rounded-full object-cover mr-4"
-          src="https://ui-avatars.com/api/?name=Luis+Reyes&background=00b4d8&color=1a103c&font-size=0.5" alt="Avatar">
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-white">Luis Reyes (Conductor)</h3>
-          <p class="text-sm text-gray-300">Ruta: <span class="font-medium">Blvd. Delta ->
-              UTL</span></p>
-          <p class="text-sm text-gray-400">Horario: <span class="font-medium">7:30 AM</span> |
-            Asientos: <span class="font-medium">1 disponible</span></p>
-        </div>
-        <button class="bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20">Contactar</button>
-      </div>
-    </div>
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-semibold text-white">
+      {{ pestanaActual === 'ofrezco' ? 'Raites Disponibles' : 'Solicitudes de Transporte' }}
+    </h2>
+
+    @if(pestanaActual === 'ofrezco') {
+      <button (click)="abrirModal('Conductor')"
+        class="bg-accent-teal text-primary-dark font-bold py-2 px-4 rounded-lg hover:bg-opacity-80 transition shadow-lg shadow-accent-teal/20">
+        + Ofrecer mi Raite
+      </button>
+    } @else {
+      <button (click)="abrirModal('Pasajero')"
+        class="bg-accent-cyan text-primary-dark font-bold py-2 px-4 rounded-lg hover:bg-opacity-80 transition shadow-lg shadow-accent-cyan/20">
+        + Publicar Búsqueda
+      </button>
+    }
   </div>
 
-  <div id="tab-busco" class="tab-content">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-semibold text-white">Pasajeros Buscando Raite</h2>
-      <button class="bg-accent-cyan text-primary-dark font-bold py-2 px-4 rounded-lg hover:bg-opacity-80">+
-        Publicar Búsqueda</button>
-    </div>
-    <div class="space-y-4">
-      <!-- Pasajero 1 -->
-      <div class="bg-glass-bg backdrop-blur-lg rounded-xl p-6 flex items-center">
-        <img class="w-12 h-12 rounded-full object-cover mr-4"
-          src="https://ui-avatars.com/api/?name=Carlos+Lopez&background=cccccc&color=1a103c&font-size=0.5" alt="Avatar">
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-white">Carlos López (Pasajero)</h3>
-          <p class="text-sm text-gray-300">Busca en: <span class="font-medium">Zona Centro</span>
-          </p>
-          <p class="text-sm text-gray-400">Horario: <span class="font-medium">Entrada 8:00
-              AM</span></p>
-        </div>
-        <button class="bg-white/10 text-white font-medium py-2 px-4 rounded-lg hover:bg-white/20">Contactar</button>
+  <div class="space-y-4">
+
+    @if (cargando) {
+      <p class="text-center text-gray-400 py-8">Cargando rutas...</p>
+    }
+
+    @if (!cargando && raitesFiltrados.length === 0) {
+      <div class="text-center py-12 bg-white/5 rounded-xl border border-white/5 border-dashed">
+        <p class="text-gray-400 mb-2">No hay publicaciones activas en esta sección.</p>
+        <p class="text-sm text-gray-500">¡Sé el primero en publicar!</p>
       </div>
+    }
+
+    @for (raite of raitesFiltrados; track raite.id) {
+    <div class="bg-glass-bg backdrop-blur-lg rounded-xl flex flex-col border border-white/5 hover:border-white/10 transition overflow-hidden">
+
+      <div class="p-6 flex flex-col md:flex-row items-start md:items-center gap-4">
+
+        <img [src]="raite.foto || 'https://ui-avatars.com/api/?name=' + raite.usuario + '&background=random'"
+             class="w-12 h-12 rounded-full object-cover shadow-md">
+
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="text-lg font-bold text-white">{{raite.usuario}}</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-white/10 text-gray-300 border border-white/10">
+              {{raite.tipo === 'Conductor' ? 'Conductor' : 'Pasajero'}}
+            </span>
+          </div>
+
+          <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-300">
+            <p>Origen: <span class="font-medium text-white">{{raite.origen}}</span></p>
+            <span class="text-gray-600 hidden md:inline">➝</span>
+            <p>Destino: <span class="font-medium text-white">{{raite.destino}}</span></p>
+          </div>
+
+          @if(raite.nota) {
+            <p class="text-xs text-gray-500 mt-2 italic">"{{raite.nota}}"</p>
+          }
+        </div>
+
+        <div class="flex flex-row md:flex-col items-center md:items-end gap-4 md:gap-1 w-full md:w-auto justify-between">
+          <div class="text-right">
+            <p class="text-lg font-bold text-accent-teal">{{raite.hora}}</p>
+            <p class="text-xs font-bold" [class]="raite.cupo > 0 ? 'text-gray-400' : 'text-red-500'">
+              {{raite.tipo === 'Conductor' ? 'Lugares: ' + raite.cupo : 'Personas: ' + raite.cupo}}
+            </p>
+          </div>
+
+          @if (raite.tipo === 'Conductor') {
+
+            @if (esMiRaite(raite)) {
+              <div class="flex items-center gap-2 mt-2">
+                <button (click)="eliminar(raite)"
+                  class="bg-red-500/10 hover:bg-red-500/20 text-red-400 p-2 rounded-lg transition border border-red-500/20"
+                  title="Eliminar Viaje">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+
+                <button (click)="togglePasajeros(raite.id!)"
+                  class="bg-white/10 text-white hover:bg-white/20 font-medium py-2 px-4 rounded-lg transition border border-white/10 text-sm flex items-center gap-2">
+                  <span>Solicitudes ({{raite.pasajeros?.length || 0}})</span>
+                  <svg class="w-4 h-4 transition-transform" [class.rotate-180]="raiteExpandidoId === raite.id" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+              </div>
+
+            }
+            @else {
+              <button (click)="solicitarViaje(raite)"
+                [disabled]="raite.cupo === 0 || yaSolicito(raite)"
+                class="font-medium py-2 px-6 rounded-lg transition border flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+                [class]="yaSolicito(raite) ? 'bg-green-500/20 text-green-400 border-green-500/20' : (raite.cupo > 0 ? 'bg-white/10 text-white hover:bg-white/20 border-white/10' : 'bg-red-500/10 text-red-400 border-red-500/20')">
+
+                @if (yaSolicito(raite)) {
+                  <span>✓ Solicitado</span>
+                } @else if (raite.cupo === 0) {
+                  <span>Lleno</span>
+                } @else {
+                  <span>Solicitar</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                }
+              </button>
+            }
+
+          } @else {
+            <button class="bg-white/10 text-white font-medium py-2 px-6 rounded-lg hover:bg-white/20 transition border border-white/10 mt-1">
+              Contactar
+            </button>
+          }
+        </div>
+      </div>
+
+      @if(esMiRaite(raite) && raiteExpandidoId === raite.id) {
+        <div class="bg-black/20 border-t border-white/10 p-4 animate-slide-down">
+          <h4 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">Pasajeros Confirmados</h4>
+
+          @if(!raite.pasajeros || raite.pasajeros.length === 0) {
+            <p class="text-sm text-gray-500 italic">Aún no hay solicitudes para este viaje.</p>
+          } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              @for(pasajero of raite.pasajeros; track pasajero.id) {
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg hover:bg-white/10 transition">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-sm font-bold text-white">
+                      {{pasajero.nombre.charAt(0)}}
+                    </div>
+                    <span class="text-white text-sm font-medium">{{pasajero.nombre}}</span>
+                  </div>
+                  <a [href]="'tel:' + pasajero.telefono" class="text-accent-teal text-sm font-mono hover:underline">
+                    {{pasajero.telefono || 'Sin tel'}}
+                  </a>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
     </div>
+    }
   </div>
 </div>
+
+@if (mostrarModal) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#1a103c] border border-white/10 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden relative">
+
+      <div class="p-6 border-b border-white/10 bg-white/5">
+        <h3 class="text-2xl font-bold text-white">
+          {{ tipoModal === 'Conductor' ? 'Ofrecer Raite' : 'Buscar Raite' }}
+        </h3>
+        <p class="text-gray-400 text-sm mt-1">
+          {{ tipoModal === 'Conductor' ? 'Ayuda a un compañero a llegar.' : 'Encuentra quién te lleve.' }}
+        </p>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Origen</label>
+            <input type="text" [(ngModel)]="nuevoRaite.origen" placeholder="Ej. Plaza Mayor"
+              class="w-full bg-white/5 border border-white/20 rounded-lg p-3 text-white focus:border-accent-teal outline-none transition">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Destino</label>
+            <input type="text" [(ngModel)]="nuevoRaite.destino" placeholder="Ej. UTL"
+              class="w-full bg-white/5 border border-white/20 rounded-lg p-3 text-white focus:border-accent-teal outline-none transition">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Hora Salida</label>
+            <input type="time" [(ngModel)]="nuevoRaite.hora"
+              class="w-full bg-white/5 border border-white/20 rounded-lg p-3 text-white focus:border-accent-teal outline-none transition [color-scheme:dark]">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">
+              {{ tipoModal === 'Conductor' ? 'Asientos Libres' : 'Personas' }}
+            </label>
+            <input type="number" [(ngModel)]="nuevoRaite.cupo" min="1" max="10"
+              class="w-full bg-white/5 border border-white/20 rounded-lg p-3 text-white focus:border-accent-teal outline-none transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Nota Adicional (Opcional)</label>
+          <textarea [(ngModel)]="nuevoRaite.nota" rows="3" placeholder="Ej. Paso por el estadio, cobro $15 para la gasolina..."
+            class="w-full bg-white/5 border border-white/20 rounded-lg p-3 text-white focus:border-accent-teal outline-none resize-none transition"></textarea>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-white/10 bg-white/5 flex justify-end gap-3">
+        <button (click)="cerrarModal()"
+          class="px-5 py-2 text-gray-300 font-medium hover:bg-white/10 rounded-lg transition">
+          Cancelar
+        </button>
+        <button (click)="publicar()"
+          class="bg-accent-teal text-primary-dark px-6 py-2 rounded-lg font-bold hover:bg-opacity-80 transition shadow-lg shadow-accent-teal/10">
+          Enviar a Revisión
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

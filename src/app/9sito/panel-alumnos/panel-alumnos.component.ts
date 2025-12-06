@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -9,14 +8,18 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './panel-alumnos.html',
-   styleUrls: ['./panel-alumnos.css']
+  styleUrls: ['./panel-alumnos.css']
 })
 export class PanelAlumnosComponent {
-  
-  // Inyectar el servicio en el constructor
-  constructor(private authService: AuthService) {}
 
-  // Método que llama el HTML
+  // Inyectar el servicio como 'public' o usar un getter para acceder desde el HTML
+  constructor(public authService: AuthService) {}
+
+  // Getter para facilitar el acceso a los datos del usuario en el HTML
+  get usuario() {
+    return this.authService.usuarioActual;
+  }
+
   cerrarSesion() {
     this.authService.logout();
   }

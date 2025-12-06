@@ -1,55 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Contacto {
-  id: number;
-  nombre: string;
-  puesto: string;
-  correo: string;
-  oficina: string;
-  avatar: string;
-}
+import { FormsModule } from '@angular/forms'; // <--- Importante: Agregado para usar ngModel
+import { InfoAcademicaService } from '../../../services/info-academica.service';
 
 @Component({
   selector: 'app-directorio',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule], // <--- Agregamos FormsModule a los imports
   templateUrl: './directorio.html',
   styleUrls: ['./directorio.css']
 })
-export class DirectorioComponent {
-  directorioData: Contacto[] = [
-    {
-      id: 1,
-      nombre: 'Prof. David Rico',
-      puesto: 'Docente - Sistemas',
-      correo: 'drico@utleon.edu.mx',
-      oficina: 'Edificio C, Cubículo 12',
-      avatar: 'https://ui-avatars.com/api/?name=David+Rico&background=00b4d8&color=1a103c&font-size=0.5'
-    },
-    {
-      id: 2,
-      nombre: 'Control Escolar',
-      puesto: 'Departamento Administrativo',
-      correo: 'escolar@utleon.edu.mx',
-      oficina: 'Edificio A, Ventanillas 1-3',
-      avatar: 'https://ui-avatars.com/api/?name=Control+Escolar&background=cccccc&color=1a103c&font-size=0.5'
-    },
-    {
-      id: 3,
-      nombre: 'Ing. Alan Turing',
-      puesto: 'Coordinador de T.I.',
-      correo: 'aturing@utleon.edu.mx',
-      oficina: 'Edificio K, Planta Alta',
-      avatar: 'https://ui-avatars.com/api/?name=Alan+Turing&background=10e3a4&color=1a103c&font-size=0.5'
-    },
-    {
-      id: 4,
-      nombre: 'Soporte Técnico',
-      puesto: 'Ayuda TI',
-      correo: 'soporte@utleon.edu.mx',
-      oficina: 'Biblioteca, Sala de Cómputo',
-      avatar: 'https://ui-avatars.com/api/?name=Soporte+Tecnico&background=9333ea&color=ffffff&font-size=0.5'
-    }
-  ];
+export class DirectorioComponent implements OnInit {
+  directorioData: any[] = [];
+
+  // Variables para los filtros
+  textoBusqueda: string = '';
+  categoriaSeleccionada: string = 'Todos los Departamentos';
+
+  constructor(private infoService: InfoAcademicaService) {}
+
+  ngOnInit() {
+    this.infoService.getDirectorio().subscribe((data: any[]) => {
+      this.directorioData = data;
+    });
+  }
+
+  // Getter para filtrar la lista en tiempo real
+  get directorioFiltrado() {
+    return this.directorioData.filter(contacto => {
+      // 1. Filtrar por texto (busca en nombre o puesto)
+      const texto = this.textoBusqueda.toLowerCase();
+      const coincideTexto =
+        contacto.nombre.toLowerCase().includes(texto) ||
+        (contacto.puesto && contacto.puesto.toLowerCase().includes(texto));
+
+      // 2. Filtrar por categoría del Dropdown
+      const coincideCategoria =
+        this.categoriaSeleccionada === 'Todos los Departamentos' ||
+        (contacto.puesto && contacto.puesto.includes(this.categoriaSeleccionada));
+
+      return coincideTexto && coincideCategoria;
+    });
+  }
 }

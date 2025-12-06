@@ -4,21 +4,19 @@
     <p class="text-lg text-gray-400">Encuentra contactos de docentes y departamentos.</p>
   </header>
 
-  <!-- Filtros -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-    <!-- Buscador -->
-    <input type="text" placeholder="Buscar por nombre o puesto..."
+
+    <input type="text" [(ngModel)]="textoBusqueda" placeholder="Buscar por nombre o puesto..."
       class="md:col-span-2 bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-accent-teal transition">
 
-    <!-- Select Departamento -->
     <div class="relative">
-      <select
-        class="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal appearance-none cursor-pointer transition [&>option]:bg-primary-dark">
-        <option>Todos los Departamentos</option>
-        <option>Sistemas</option>
-        <option>Mecatrónica</option>
-        <option>Gastronomía</option>
-        <option>Administrativo</option>
+      <select [(ngModel)]="categoriaSeleccionada"
+        class="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-teal appearance-none cursor-pointer transition">
+        <option class="bg-[#1a103c]" value="Todos los Departamentos">Todos los Departamentos</option>
+        <option class="bg-[#1a103c]" value="Sistemas">Sistemas</option>
+        <option class="bg-[#1a103c]" value="Mecatrónica">Mecatrónica</option>
+        <option class="bg-[#1a103c]" value="Gastronomía">Gastronomía</option>
+        <option class="bg-[#1a103c]" value="Administrativo">Administrativo</option>
       </select>
       <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
         <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -28,15 +26,14 @@
     </div>
   </div>
 
-  <!-- Contenido -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    @for (contacto of directorioData; track contacto.id) {
-    <div
-      class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6 border border-white/5 hover:bg-white/5 transition duration-300">
+    @for (contacto of directorioFiltrado; track contacto.id) {
+    <div class="bg-glass-bg backdrop-blur-lg rounded-xl shadow-2xl p-6 border border-white/5 hover:bg-white/5 transition duration-300">
       <div class="flex items-center mb-4">
-        <img [src]="contacto.avatar" class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-white/10"
-          [alt]="contacto.nombre">
+        <img [src]="contacto.avatar || 'https://ui-avatars.com/api/?name=' + contacto.nombre + '&background=random'"
+             class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-white/10"
+             [alt]="contacto.nombre">
         <div>
           <h3 class="text-xl font-semibold text-white">{{contacto.nombre}}</h3>
           <p class="text-accent-cyan text-sm">{{contacto.puesto}}</p>
@@ -46,8 +43,7 @@
       <div class="space-y-2">
         <p class="text-sm text-gray-300 flex flex-col">
           <span class="text-xs text-gray-500 uppercase font-bold">Correo</span>
-          <span
-            class="font-medium text-white hover:text-accent-teal cursor-pointer transition">{{contacto.correo}}</span>
+          <span class="font-medium text-white hover:text-accent-teal cursor-pointer transition">{{contacto.correo}}</span>
         </p>
         <p class="text-sm text-gray-300 flex flex-col">
           <span class="text-xs text-gray-500 uppercase font-bold">Oficina</span>
@@ -55,6 +51,12 @@
         </p>
       </div>
     </div>
+    }
+
+    @if (directorioFiltrado.length === 0) {
+      <div class="col-span-full text-center py-12 bg-white/5 rounded-xl border border-white/5 border-dashed">
+        <p class="text-gray-400">No se encontraron contactos que coincidan con tu búsqueda.</p>
+      </div>
     }
 
   </div>

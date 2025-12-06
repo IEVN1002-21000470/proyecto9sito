@@ -1,13 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Vacante {
-  id: number;
-  puesto: string;
-  empresa: string;
-  tipo: string;
-  ubicacion: string;
-}
+import { InfoAcademicaService } from '../../../services/info-academica.service';
 
 @Component({
   selector: 'app-bolsa',
@@ -16,11 +9,59 @@ interface Vacante {
   templateUrl: './bolsa.html',
   styleUrls: ['./bolsa.css']
 })
-export class BolsaComponent {
-  vacantesData: Vacante[] = [
-    { id: 1, puesto: 'Desarrollador Web Jr', empresa: 'TechSolutions', tipo: 'Estadía', ubicacion: 'León, Gto.' },
-    { id: 2, puesto: 'Soporte Técnico', empresa: 'Zapatería 3 Hermanos', tipo: 'Medio Tiempo', ubicacion: 'León, Gto.' },
-    { id: 3, puesto: 'Diseñador UX/UI', empresa: 'Kondimento', tipo: 'Tiempo Completo', ubicacion: 'Remoto' },
-    { id: 4, puesto: 'Practicante de Redes', empresa: 'Megacable', tipo: 'Estadía', ubicacion: 'León, Gto.' }
-  ];
+export class BolsaComponent implements OnInit {
+
+  vacantesData: any[] = [];
+  cargando: boolean = true;
+
+  // --- FILTRO ---
+  filtroActual: string = 'Todos';
+
+  // --- MODAL ---
+  mostrarModal: boolean = false;
+  vacanteSeleccionada: any = null;
+
+  constructor(private infoService: InfoAcademicaService) {}
+
+  ngOnInit() {
+    this.cargando = true;
+    this.infoService.getVacantes().subscribe({
+      next: (data: any[]) => {
+        this.vacantesData = data;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.cargando = false;
+      }
+    });
+  }
+
+  // --- MÉTODOS DE FILTRO ---
+  cambiarFiltro(filtro: string) {
+    this.filtroActual = filtro;
+  }
+
+  get vacantesFiltradas() {
+    if (this.filtroActual === 'Todos') {
+      return this.vacantesData;
+    }
+    // Filtramos comparando exactamente el texto de la BD (ej: 'Estadía', 'Tiempo Completo')
+    return this.vacantesData.filter(v => v.tipo === this.filtroActual);
+  }
+
+  // --- MÉTODOS DEL MODAL ---
+  verDetalles(vacante: any) {
+    this.vacanteSeleccionada = vacante;
+    this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.vacanteSeleccionada = null;
+  }
+
+  aplicar() {
+    alert('Para aplicar, envía tu CV al correo de la empresa o acude a Servicios Escolares.');
+  }
 }
